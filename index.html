@@ -1,0 +1,1656 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TC Voice Ads – AI Voice Generator</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            red: '#E50914',
+                            redhover: '#B80710',
+                            dark: '#0F172A',
+                            card: '#1E293B',
+                            accent: '#FF2E93',
+                            gray: '#64748B'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar & visual polish */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #E50914;
+        }
+        .waveform-bar {
+            transition: height 0.15s ease-in-out;
+        }
+        .custom-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #E50914;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col md:flex-row antialiased">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-full md:w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between shrink-0 z-30">
+        <div>
+            <!-- Logo Brand -->
+            <div class="p-5 flex items-center justify-between border-b border-slate-800">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-red to-rose-500 flex items-center justify-center text-white font-extrabold text-xl shadow-lg shadow-red-900/40">
+                        <i class="fa-solid fa-microphone-lines"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg leading-tight tracking-wide text-white">TC VOICE <span class="text-brand-red">ADS</span></h1>
+                        <p class="text-xs text-slate-400 font-medium">Turja Computer Studio</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nav Links -->
+            <nav class="p-3 space-y-1">
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-sm transition-all bg-brand-red text-white shadow-md shadow-red-950">
+                    <i class="fa-solid fa-house w-5 text-center"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button onclick="switchTab('generator')" id="nav-generator" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-sm text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
+                    <i class="fa-solid fa-wand-magic-sparkles w-5 text-center text-rose-500"></i>
+                    <span>Buat Voice Over</span>
+                </button>
+                <button onclick="switchTab('script-ai')" id="nav-script-ai" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-sm text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
+                    <i class="fa-solid fa-pen-nib w-5 text-center text-amber-500"></i>
+                    <span>AI Script Writer</span>
+                </button>
+                <button onclick="switchTab('profiles')" id="nav-profiles" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-sm text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
+                    <i class="fa-solid fa-sliders w-5 text-center text-emerald-500"></i>
+                    <span>Voice Profiles</span>
+                </button>
+                <button onclick="switchTab('history')" id="nav-history" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-sm text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
+                    <i class="fa-solid fa-clock-rotate-left w-5 text-center text-cyan-500"></i>
+                    <span>Riwayat Ads</span>
+                </button>
+                <button onclick="switchTab('branding')" id="nav-branding" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-sm text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
+                    <i class="fa-solid fa-store w-5 text-center text-purple-500"></i>
+                    <span>Branding Toko</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Footer Info -->
+        <div class="p-4 border-t border-slate-800 text-xs text-slate-500">
+            <div class="flex items-center space-x-2 mb-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-slate-300 font-medium">Gemini 2.5 TTS Engine</span>
+            </div>
+            <p>© 2026 TC Voice Ads v2.4. Specially crafted for Turja Computer Promos.</p>
+        </div>
+    </aside>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 bg-slate-950 flex flex-col h-screen overflow-y-auto relative">
+
+        <!-- Top Header Status Bar -->
+        <header class="bg-slate-900/80 backdrop-blur border-b border-slate-800 px-6 py-4 flex items-center justify-between sticky top-0 z-20">
+            <div class="flex items-center space-x-3">
+                <h2 id="page-title" class="text-xl font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-grip-vertical text-brand-red"></i> Dashboard Utama
+                </h2>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button onclick="quickStart()" class="bg-gradient-to-r from-brand-red to-rose-600 hover:opacity-90 text-white font-medium text-xs px-4 py-2.5 rounded-lg shadow-lg flex items-center gap-2 transition">
+                    <i class="fa-solid fa-bolt"></i> Quick Ad Generator
+                </button>
+            </div>
+        </header>
+
+        <!-- Dynamic Content Sections -->
+        <div class="p-6 flex-1">
+
+            <!-- SECTION 1: DASHBOARD -->
+            <section id="tab-dashboard" class="space-y-6">
+                <!-- Hero Banner -->
+                <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border border-slate-800 p-8 shadow-2xl">
+                    <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-brand-red/10 rounded-full blur-3xl"></div>
+                    <div class="max-w-3xl relative z-10 space-y-4">
+                        <span class="bg-brand-red/20 text-brand-red text-xs px-3 py-1 rounded-full font-semibold border border-brand-red/30 inline-flex items-center gap-1.5">
+                            <i class="fa-solid fa-sparkles"></i> AI Voice Generator Pro 2026
+                        </span>
+                        <h1 class="text-3xl md:text-4xl font-extrabold text-white leading-tight">
+                            Buat Voice Over Iklan Profesional Dalam Hitungan Detik.
+                        </h1>
+                        <p class="text-slate-300 text-sm md:text-base leading-relaxed">
+                            Ubah teks promosi laptop, PC rakitan, printer, dan komputer bekas menjadi suara manusia yang sangat natural, ekspresif, dan berwibawa khusus untuk TikTok, Instagram Reels, Marketplace & WA Status.
+                        </p>
+                        <div class="pt-2 flex flex-wrap gap-3">
+                            <button onclick="switchTab('generator')" class="bg-brand-red hover:bg-brand-redhover text-white px-6 py-3 rounded-xl font-bold text-sm shadow-xl shadow-red-950 flex items-center gap-2 transition transform active:scale-95">
+                                <i class="fa-solid fa-microphone"></i> Mulai Buat Voice Over
+                            </button>
+                            <button onclick="switchTab('script-ai')" class="bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 px-6 py-3 rounded-xl font-semibold text-sm flex items-center gap-2 transition">
+                                <i class="fa-solid fa-pen-sparkles text-amber-400"></i> Buat Script Otomatis AI
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature Grid Targets -->
+                <div>
+                    <h3 class="text-base font-bold text-slate-300 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-bullseye text-brand-red"></i> Kategori Promosi Komputer & Electronics
+                    </h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div onclick="applyQuickPreset('laptop_second')" class="bg-slate-900 border border-slate-800 hover:border-brand-red/50 p-4 rounded-xl cursor-pointer group transition">
+                            <div class="w-10 h-10 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center text-lg mb-3 group-hover:scale-110 transition">
+                                <i class="fa-solid fa-laptop"></i>
+                            </div>
+                            <h4 class="font-bold text-sm text-white">Laptop Second / Bekas</h4>
+                            <p class="text-xs text-slate-400 mt-1">Siap pakai, garansi & harga hemat.</p>
+                        </div>
+                        <div onclick="applyQuickPreset('pc_gaming')" class="bg-slate-900 border border-slate-800 hover:border-brand-red/50 p-4 rounded-xl cursor-pointer group transition">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-500 flex items-center justify-center text-lg mb-3 group-hover:scale-110 transition">
+                                <i class="fa-solid fa-desktop"></i>
+                            </div>
+                            <h4 class="font-bold text-sm text-white">PC Rakitan & Gaming</h4>
+                            <p class="text-xs text-slate-400 mt-1">Performa monster, RTX series.</p>
+                        </div>
+                        <div onclick="applyQuickPreset('aksesoris')" class="bg-slate-900 border border-slate-800 hover:border-brand-red/50 p-4 rounded-xl cursor-pointer group transition">
+                            <div class="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center text-lg mb-3 group-hover:scale-110 transition">
+                                <i class="fa-solid fa-keyboard"></i>
+                            </div>
+                            <h4 class="font-bold text-sm text-white">Aksesoris & Printer</h4>
+                            <p class="text-xs text-slate-400 mt-1">Monitor, keyboard, SSD, printer.</p>
+                        </div>
+                        <div onclick="applyQuickPreset('flash_sale')" class="bg-slate-900 border border-slate-800 hover:border-brand-red/50 p-4 rounded-xl cursor-pointer group transition">
+                            <div class="w-10 h-10 rounded-lg bg-rose-500/10 text-rose-500 flex items-center justify-center text-lg mb-3 group-hover:scale-110 transition">
+                                <i class="fa-solid fa-bolt text-brand-red"></i>
+                            </div>
+                            <h4 class="font-bold text-sm text-white">Flash Sale Toko</h4>
+                            <p class="text-xs text-slate-400 mt-1">Promosi stok terbatas & diskon.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Saved Activity Quick Bar -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold text-sm text-white flex items-center gap-2">
+                            <i class="fa-solid fa-clock-rotate-left text-cyan-400"></i> Riwayat Suara Iklan Terakhir
+                        </h3>
+                        <button onclick="switchTab('history')" class="text-xs text-brand-red hover:underline font-semibold">Lihat Semua</button>
+                    </div>
+                    <div id="dashboard-history-preview" class="space-y-2 text-xs text-slate-400">
+                        <p class="italic py-2 text-center text-slate-500">Belum ada audio iklan yang dibuat. Mulai buat sekarang!</p>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- SECTION 2: GENERATOR UTAMA (2 KOLOM) -->
+            <section id="tab-generator" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+                <!-- KOLOM KIRI: Editor Teks, Script AI, Markup, Specific Specs (Lg: col-7) -->
+                <div class="lg:col-span-7 space-y-6">
+
+                    <!-- Script Templates & AI Fast Rewrite Toolbar -->
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-wrap items-center justify-between gap-3">
+                        <div class="flex items-center space-x-2">
+                            <label class="text-xs font-semibold text-slate-400"><i class="fa-solid fa-layer-group text-slate-300"></i> Template Iklan:</label>
+                            <select id="template-select" onchange="loadTemplate(this.value)" class="bg-slate-800 border border-slate-700 text-slate-200 text-xs rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-brand-red">
+                                <option value="">-- Pilih Template Turja Computer --</option>
+                                <option value="temp_1">Template 1 – Promo Laptop Second Lenovo ThinkPad</option>
+                                <option value="temp_2">Template 2 – Flash Sale Laptop Murah Hari Ini</option>
+                                <option value="temp_3">Template 3 – Laptop Second Teruji & Garansi</option>
+                                <option value="temp_4">Template 4 – Laptop Pelajar / Kuliah Hemat</option>
+                                <option value="temp_5">Template 5 – Laptop Kantoran / Bisnis High-Spec</option>
+                                <option value="temp_6">Template 6 – Promo PC Gaming Rakitan Intel/Ryzen</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="aiRewriteScript('persuasif')" class="bg-slate-800 hover:bg-slate-700 text-xs text-amber-400 border border-slate-700 px-2.5 py-1.5 rounded-lg flex items-center gap-1">
+                                <i class="fa-solid fa-wand-magic"></i> AI Rewrite Menjual
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Main Textarea Editor -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-3 relative">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                            <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                                <i class="fa-solid fa-align-left text-brand-red"></i> Input Script Promosi Iklan
+                            </span>
+                            <div class="flex items-center space-x-4 text-xs font-medium text-slate-400">
+                                <span><i class="fa-solid fa-font"></i> <span id="char-count">0</span> Karakter</span>
+                                <span><i class="fa-solid fa-stopwatch"></i> Estimasi ~<span id="est-duration">0</span>s</span>
+                            </div>
+                        </div>
+
+                        <textarea id="ad-script-input" rows="8" oninput="updateScriptStats()"
+                            class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-brand-red transition font-sans leading-relaxed resize-y"
+                            placeholder="Contoh:
+Ada laptop berkualitas dengan harga terjangkau?
+Lenovo ThinkPad X390 ini bisa jadi pilihan terbaik Anda.
+Intel Core i5 Gen 8, RAM 8GB DDR4, SSD 256GB NVMe, layar 13.3 inci Full HD.
+Cocok untuk kerja, kuliah, sekolah, maupun bisnis.
+Harga hanya 4 jutaan!
+Stok terbatas, segera hubungi Turja Computer."></textarea>
+
+                        <!-- Quick Markup Toolbar -->
+                        <div class="space-y-2 pt-1">
+                            <label class="text-xs font-semibold text-slate-400 flex items-center gap-1">
+                                <i class="fa-solid fa-tags text-rose-400"></i> Sisipkan Tag Markup Kontrol Kalimat:
+                            </label>
+                            <div class="flex flex-wrap gap-1.5 text-xs">
+                                <button onclick="insertTag('[Pause]')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded border border-slate-700">[Pause]</button>
+                                <button onclick="insertTag('[Pause Short]')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded border border-slate-700">[Jeda Pendek]</button>
+                                <button onclick="insertTag('[Pause Long]')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded border border-slate-700">[Jeda Panjang]</button>
+                                <button onclick="insertTag('[Excited]')" class="bg-rose-950/60 hover:bg-rose-900/60 text-rose-300 px-2 py-1 rounded border border-rose-800/50">[Excited]</button>
+                                <button onclick="insertTag('[Strong Emphasis]')" class="bg-amber-950/60 hover:bg-amber-900/60 text-amber-300 px-2 py-1 rounded border border-amber-800/50">[Strong Emphasis]</button>
+                                <button onclick="insertTag('[Whisper]')" class="bg-indigo-950/60 hover:bg-indigo-900/60 text-indigo-300 px-2 py-1 rounded border border-indigo-800/50">[Whisper]</button>
+                                <button onclick="insertTag('[Professional]')" class="bg-slate-800 hover:bg-slate-700 text-emerald-300 px-2 py-1 rounded border border-slate-700">[Professional]</button>
+                            </div>
+                        </div>
+
+                        <!-- Editor Action Buttons -->
+                        <div class="flex flex-wrap items-center justify-between pt-2 gap-2 border-t border-slate-800">
+                            <div class="flex items-center space-x-2">
+                                <button onclick="autoApplySmartEmphasis()" class="bg-gradient-to-r from-indigo-900 to-purple-900 hover:from-indigo-800 hover:to-purple-800 text-indigo-200 text-xs px-3 py-2 rounded-lg font-semibold flex items-center gap-1.5 border border-indigo-700/50">
+                                    <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> AI Smart Emphasis
+                                </button>
+                                <button onclick="copyScriptText()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs px-3 py-2 rounded-lg font-medium flex items-center gap-1 border border-slate-700">
+                                    <i class="fa-solid fa-copy"></i> Copy Script
+                                </button>
+                                <button onclick="appendBrandingCTA()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs px-3 py-2 rounded-lg font-medium flex items-center gap-1 border border-slate-700">
+                                    <i class="fa-solid fa-plus-circle text-purple-400"></i> + CTA Toko
+                                </button>
+                            </div>
+                            <button onclick="clearScriptText()" class="text-xs text-slate-500 hover:text-slate-300 px-2 py-1">
+                                <i class="fa-solid fa-trash"></i> Bersihkan
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Mode Pengucapan Spesifikasi Teknis (Point 9) -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h4 class="text-xs font-bold text-slate-200 flex items-center gap-2">
+                                <i class="fa-solid fa-microchip text-cyan-400"></i> Pengucapan Spesifikasi Teknis AI
+                            </h4>
+                            <span class="text-[10px] text-slate-400 bg-slate-800 px-2 py-0.5 rounded">Auto Smart Reader</span>
+                        </div>
+                        <p class="text-xs text-slate-400">Pilih bagaimana AI membaca istilah komputer (e.g. "i5", "RAM 8GB", "SSD 256GB NVMe", "Rp4.000.000"):</p>
+                        <div class="grid grid-cols-3 gap-2 text-xs">
+                            <label class="bg-slate-950 border border-slate-800 rounded-lg p-2.5 cursor-pointer flex items-center gap-2 hover:border-slate-700">
+                                <input type="radio" name="tech_mode" value="natural" checked class="accent-brand-red">
+                                <div>
+                                    <div class="font-bold text-slate-200">Secara Natural</div>
+                                    <div class="text-[10px] text-slate-500">"i lima", "delapan gigabyte"</div>
+                                </div>
+                            </label>
+                            <label class="bg-slate-950 border border-slate-800 rounded-lg p-2.5 cursor-pointer flex items-center gap-2 hover:border-slate-700">
+                                <input type="radio" name="tech_mode" value="literal" class="accent-brand-red">
+                                <div>
+                                    <div class="font-bold text-slate-200">Sesuai Tulisan Asli</div>
+                                    <div class="text-[10px] text-slate-500">Persis seperti karakter ketikan</div>
+                                </div>
+                            </label>
+                            <label class="bg-slate-950 border border-slate-800 rounded-lg p-2.5 cursor-pointer flex items-center gap-2 hover:border-slate-700">
+                                <input type="radio" name="tech_mode" value="full" class="accent-brand-red">
+                                <div>
+                                    <div class="font-bold text-slate-200">Dibacakan Lengkap</div>
+                                    <div class="text-[10px] text-slate-500">Dengan satuan penuh & jelas</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Background Music Controls (Point 13) -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h4 class="text-xs font-bold text-slate-200 flex items-center gap-2">
+                                <i class="fa-solid fa-music text-purple-400"></i> Background Music (Bebas Royalti)
+                            </h4>
+                            <span class="text-[10px] text-emerald-400 bg-emerald-950 border border-emerald-800 px-2 py-0.5 rounded">Voice Dominant Mix</span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-xs text-slate-400 mb-1 block">Genre / Preset Musik:</label>
+                                <select id="bgm-select" class="w-full bg-slate-950 border border-slate-800 text-xs text-slate-200 rounded-lg p-2 focus:outline-none focus:border-brand-red">
+                                    <option value="none">Tanpa Musik (Hanya Suara)</option>
+                                    <option value="energetic" selected>⚡ Energetic Marketing Beats</option>
+                                    <option value="corporate">🏢 Corporate Business Smooth</option>
+                                    <option value="tech">💻 Tech & Modern Electronics</option>
+                                    <option value="luxury">✨ Luxury & Premium Feel</option>
+                                    <option value="gaming">🎮 Gaming RGB High Energy</option>
+                                    <option value="happy">😊 Happy Upbeat Shop Sale</option>
+                                </select>
+                            </div>
+                            <div class="space-y-2">
+                                <div>
+                                    <div class="flex justify-between text-[11px] text-slate-400 mb-1">
+                                        <span>Volume Voice</span>
+                                        <span id="val-voice-vol">100%</span>
+                                    </div>
+                                    <input type="range" id="vol-voice" min="0" max="100" value="100" oninput="document.getElementById('val-voice-vol').innerText=this.value+'%'" class="w-full accent-brand-red h-1.5 bg-slate-950 rounded-lg cursor-pointer">
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-[11px] text-slate-400 mb-1">
+                                        <span>Volume Music</span>
+                                        <span id="val-bgm-vol">15%</span>
+                                    </div>
+                                    <input type="range" id="vol-bgm" min="0" max="50" value="15" oninput="document.getElementById('val-bgm-vol').innerText=this.value+'%'" class="w-full accent-brand-red h-1.5 bg-slate-950 rounded-lg cursor-pointer">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- KOLOM KANAN: Suara, Gaya Iklan, Intonasi, Generator Playback (Lg: col-5) -->
+                <div class="lg:col-span-5 space-y-6">
+
+                    <!-- Voice Selection Box -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                            <h4 class="text-xs font-bold text-slate-200 flex items-center gap-2">
+                                <i class="fa-solid fa-user-gear text-brand-red"></i> Character Voice Selection
+                            </h4>
+                            <span class="text-[10px] text-slate-400">16 Karakter Suara AI</span>
+                        </div>
+
+                        <!-- Voice Gender Tabs -->
+                        <div class="grid grid-cols-2 gap-2 bg-slate-950 p-1 rounded-lg border border-slate-800 text-xs font-medium">
+                            <button onclick="toggleVoiceGender('male')" id="btn-voice-male" class="py-1.5 rounded-md text-center bg-brand-red text-white shadow">Pria (8 Voice)</button>
+                            <button onclick="toggleVoiceGender('female')" id="btn-voice-female" class="py-1.5 rounded-md text-center text-slate-400 hover:text-white">Wanita (8 Voice)</button>
+                        </div>
+
+                        <!-- Male Voices Options -->
+                        <div id="male-voices-list" class="space-y-1.5 max-h-56 overflow-y-auto pr-1">
+                            <label class="voice-option bg-slate-950 border border-slate-800 p-2.5 rounded-lg flex items-center justify-between cursor-pointer hover:border-brand-red/60 transition">
+                                <div class="flex items-center space-x-2.5">
+                                    <input type="radio" name="selected_voice" value="Pria - Natural" checked class="accent-brand-red">
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-200">1. Pria – Natural</div>
+                                        <div class="text-[10px] text-slate-400">Santai, ramah & natural (Fenrir)</div>
+                                    </div>
+                                </div>
+                                <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Utama</span>
+                            </label>
+                            <label class="voice-option bg-slate-950 border border-slate-800 p-2.5 rounded-lg flex items-center justify-between cursor-pointer hover:border-brand-red/60 transition">
+                                <div class="flex items-center space-x-2.5">
+                                    <input type="radio" name="selected_voice" value="Pria - Profesional" class="accent-brand-red">
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-200">2. Pria – Profesional</div>
+                                        <div class="text-[10px] text-slate-400">Jelas, terstruktur (Orus)</div>
+                                    </div>
+                                </div>
+                                <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Kantor</span>
+                            </label>
+                            <label class="voice-option bg-slate-950 border border-slate-800 p-2.5 rounded-lg flex items-center justify-between cursor-pointer hover:border-brand-red/60 transition">
+                                <div class="flex items-center space-x-2.5">
+                                    <input type="radio" name="selected_voice" value="Pria - Ramah" class="accent-brand-red">
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-200">3. Pria – Ramah</div>
+                                        <div class="text-[10px] text-slate-400">Hangat, customer service (Puck)</div>
+                                    </div>
+                                </div>
+                            </label>
+                            <label class="voice-option bg-slate-950 border border-slate-800 p-2.5 rounded-lg flex items-center justify-between cursor-pointer hover:border-brand-red/60 transition">
+                                <div class="flex items-center space-x-2.5">
+                                    <input type="radio" name="selected_voice" value="Pria - Energik" class="accent-brand-red">
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-200">4. Pria – Energik</div>
+                                        <div class="text-[10px] text-slate-400">Semangat tinggi, flash sale (Zephyr)</div>
+                                    </div>
+                                </div>
+                                <span class="text-[10px] bg-rose-950 text-rose-400 border border-rose-800 px-2 py-0.5 rounded">Hot</span>
+                            </label>
+                            <label class="voice-option bg-slate-950 border border-slate-800 p-2.5 rounded-lg flex items-center justify-between cursor-pointer hover:border-brand-red/60 transition">
+                                <div class="flex items-center space-x-2.5">
+                                    <input type="radio" name="selected_voice" value="Pria - Berwibawa" class="accent-brand-red">
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-200">5. Pria – Berwibawa</div>
+                                        <div class="text-[10px] text-slate-400">Dalam, tegas, laptop bisnis (Charon)</div>
+                                    </div>
+                                </div>
+                            </label>
+                            <label class="voice-option bg-slate-950 border border-slate-800 p-2.5 rounded-lg flex items-center justify-between cursor-pointer hover:border-brand-red/60 transition">
+                                <div class="flex items-center space-x-2.5">
+                                    <input type="radio" name="selected_voice" value="Pria - Santai" class="accent-brand-red">
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-200">6. Pria – Santai</div>
+                                        <div class="text-[10px] text-slate-400">Casual vlog style (Umbriel)</div>
+                                    </div>
+                                </div>
+                            </label>
+                            <label class="voice-option bg-slate-950 border border-slate-800 p-2.5 rounded-lg flex items-center justify-between cursor-pointer hover:border-brand-red/60 transition">
+                                <div class="flex items-center space-x-2.5">
+                                    <input type="radio" name="selected_voice" value="Pria - Suara Marketing" class="accent-brand-red">
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-200">7. Pria – Suara Marketing</div>
+                                        <div class="text-[10px] text-slate-400">Persuasif promosi toko (Rasalgethi)</div>
+                                    </div>
+                                </div>
+                            </label>
+                            <label class="voice-option bg-slate-950 border border-slate-800 p-2.5 rounded-lg flex items-center justify-between cursor-pointer hover:border-brand-red/60 transition">
+                                <div class="flex items-center space-x-2.5">
+                                    <input type="radio" name="selected_voice" value="Pria - Suara Presenter" class="accent-brand-red">
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-200">8. Pria – Suara Presenter</div>
+                                        <div class="text-[10px] text-slate-400">Iklan TV & YouTube Shorts (Gacrux)</div>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Female Voices Options -->
+                        <div id="female-voices-list" class="space-y-1.5 max-h-56 overflow-y-auto pr-1 hidden">
+                            <label class="voice-option bg-slate-950 border border-slate-800 p-2.5 rounded-lg flex items-center justify-between cursor-pointer hover:border-brand-red/60 transition">
+                                <div class="flex items-center space-x-2.5">
+                                    <input type="radio" name="selected_voice" value="Wanita - Natural" class="accent-brand-red">
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-200">1. Wanita – Natural</div>
+                                        <div class="text-[10px] text-slate-400">Jelas & ramah (Aoede)</div>
+                                    </div>
+                                </div>
+                            </label>
+                            <label class="voice-option bg-slate-950 border border-slate-800 p-2.5 rounded-lg flex items-center justify-between cursor-pointer hover:border-brand-red/60 transition">
+                                <div class="flex items-center space-x-2.5">
+                                    <input type="radio" name="selected_voice" value="Wanita - Profesional" class="accent-brand-red">
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-200">2. Wanita – Profesional</div>
+                                        <div class="text-[10px] text-slate-400">Fokus & formal (Kore)</div>
+                                    </div>
+                                </div>
+                            </label>
+                            <label class="voice-option bg-slate-950 border border-slate-800 p-2.5 rounded-lg flex items-center justify-between cursor-pointer hover:border-brand-red/60 transition">
+                                <div class="flex items-center space-x-2.5">
+                                    <input type="radio" name="selected_voice" value="Wanita - Ramah" class="accent-brand-red">
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-200">3. Wanita – Ramah</div>
+                                        <div class="text-[10px] text-slate-400">Senyum & welcoming (Leda)</div>
+                                    </div>
+                                </div>
+                            </label>
+                            <label class="voice-option bg-slate-950 border border-slate-800 p-2.5 rounded-lg flex items-center justify-between cursor-pointer hover:border-brand-red/60 transition">
+                                <div class="flex items-center space-x-2.5">
+                                    <input type="radio" name="selected_voice" value="Wanita - Energik" class="accent-brand-red">
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-200">4. Wanita – Energik</div>
+                                        <div class="text-[10px] text-slate-400">Cepat & antusias (Laomedeia)</div>
+                                    </div>
+                                </div>
+                            </label>
+                            <label class="voice-option bg-slate-950 border border-slate-800 p-2.5 rounded-lg flex items-center justify-between cursor-pointer hover:border-brand-red/60 transition">
+                                <div class="flex items-center space-x-2.5">
+                                    <input type="radio" name="selected_voice" value="Wanita - Elegan" class="accent-brand-red">
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-200">5. Wanita – Elegan</div>
+                                        <div class="text-[10px] text-slate-400">Mewah & bernada halus (Callirrhoe)</div>
+                                    </div>
+                                </div>
+                            </label>
+                            <label class="voice-option bg-slate-950 border border-slate-800 p-2.5 rounded-lg flex items-center justify-between cursor-pointer hover:border-brand-red/60 transition">
+                                <div class="flex items-center space-x-2.5">
+                                    <input type="radio" name="selected_voice" value="Wanita - Santai" class="accent-brand-red">
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-200">6. Wanita – Santai</div>
+                                        <div class="text-[10px] text-slate-400">Informal & santai (Despina)</div>
+                                    </div>
+                                </div>
+                            </label>
+                            <label class="voice-option bg-slate-950 border border-slate-800 p-2.5 rounded-lg flex items-center justify-between cursor-pointer hover:border-brand-red/60 transition">
+                                <div class="flex items-center space-x-2.5">
+                                    <input type="radio" name="selected_voice" value="Wanita - Suara Marketing" class="accent-brand-red">
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-200">7. Wanita – Suara Marketing</div>
+                                        <div class="text-[10px] text-slate-400">Sangat persuasif toko (Sadachbia)</div>
+                                    </div>
+                                </div>
+                            </label>
+                            <label class="voice-option bg-slate-950 border border-slate-800 p-2.5 rounded-lg flex items-center justify-between cursor-pointer hover:border-brand-red/60 transition">
+                                <div class="flex items-center space-x-2.5">
+                                    <input type="radio" name="selected_voice" value="Wanita - Suara Presenter" class="accent-brand-red">
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-200">8. Wanita – Suara Presenter</div>
+                                        <div class="text-[10px] text-slate-400">Siaran iklan TikTok/Reels (Vindemiatrix)</div>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Preset Gaya Iklan (Point 4) -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-3">
+                        <h4 class="text-xs font-bold text-slate-200 flex items-center gap-2">
+                            <i class="fa-solid fa-[#FF2E93] fa-clapperboard text-rose-400"></i> Preset Gaya Iklan & Platform
+                        </h4>
+                        <div class="grid grid-cols-3 gap-1.5 text-[11px]">
+                            <button onclick="applyAdPreset('viral')" class="bg-slate-950 border border-slate-800 hover:border-brand-red text-slate-200 py-1.5 px-2 rounded-lg truncate text-left">🔥 Iklan Viral</button>
+                            <button onclick="applyAdPreset('tiktok')" class="bg-slate-950 border border-slate-800 hover:border-brand-red text-slate-200 py-1.5 px-2 rounded-lg truncate text-left">📱 TikTok</button>
+                            <button onclick="applyAdPreset('reels')" class="bg-slate-950 border border-slate-800 hover:border-brand-red text-slate-200 py-1.5 px-2 rounded-lg truncate text-left">🎬 Instagram Reels</button>
+                            <button onclick="applyAdPreset('laptop')" class="bg-slate-950 border border-slate-800 hover:border-brand-red text-slate-200 py-1.5 px-2 rounded-lg truncate text-left">💻 Promosi Laptop</button>
+                            <button onclick="applyAdPreset('pc')" class="bg-slate-950 border border-slate-800 hover:border-brand-red text-slate-200 py-1.5 px-2 rounded-lg truncate text-left">🖥️ Promosi PC</button>
+                            <button onclick="applyAdPreset('flash')" class="bg-slate-950 border border-slate-800 hover:border-brand-red text-slate-200 py-1.5 px-2 rounded-lg truncate text-left">⚡ Flash Sale</button>
+                            <button onclick="applyAdPreset('gaming')" class="bg-slate-950 border border-slate-800 hover:border-brand-red text-slate-200 py-1.5 px-2 rounded-lg truncate text-left">🎮 Gaming</button>
+                            <button onclick="applyAdPreset('hard')" class="bg-slate-950 border border-slate-800 hover:border-brand-red text-slate-200 py-1.5 px-2 rounded-lg truncate text-left">📢 Hard Selling</button>
+                            <button onclick="applyAdPreset('soft')" class="bg-slate-950 border border-slate-800 hover:border-brand-red text-slate-200 py-1.5 px-2 rounded-lg truncate text-left">🤝 Soft Selling</button>
+                        </div>
+                    </div>
+
+                    <!-- Sliders Intonasi, Kecepatan, Energi & Ekspresi (Point 5 & 6) -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-4">
+                        <h4 class="text-xs font-bold text-slate-200 flex items-center gap-2">
+                            <i class="fa-solid fa-sliders text-amber-400"></i> Kontrol Intonasi & Ekspresi Suara
+                        </h4>
+
+                        <!-- Kecepatan -->
+                        <div>
+                            <div class="flex justify-between text-xs text-slate-400 mb-1">
+                                <span>Kecepatan Bicara</span>
+                                <span id="val-speed" class="text-brand-red font-bold">1.0x</span>
+                            </div>
+                            <input type="range" id="input-speed" min="0.75" max="1.3" step="0.05" value="1.0" oninput="document.getElementById('val-speed').innerText = parseFloat(this.value).toFixed(2)+'x'" class="w-full custom-range h-1.5 bg-slate-950 rounded-lg">
+                        </div>
+
+                        <!-- Intonasi / Pitch -->
+                        <div>
+                            <div class="flex justify-between text-xs text-slate-400 mb-1">
+                                <span>Intonasi (Pitch)</span>
+                                <span id="val-pitch" class="text-emerald-400 font-bold">Natural</span>
+                            </div>
+                            <input type="range" id="input-pitch" min="1" max="5" step="1" value="3" oninput="updatePitchLabel(this.value)" class="w-full custom-range h-1.5 bg-slate-950 rounded-lg">
+                        </div>
+
+                        <!-- Ekspresi & Energi Dropdowns -->
+                        <div class="grid grid-cols-2 gap-3 text-xs">
+                            <div>
+                                <label class="text-slate-400 mb-1 block">Energi Suara:</label>
+                                <select id="input-energy" class="w-full bg-slate-950 border border-slate-800 text-slate-200 rounded-lg p-2 focus:outline-none focus:border-brand-red">
+                                    <option value="Tenang">Tenang</option>
+                                    <option value="Natural" selected>Natural</option>
+                                    <option value="Semangat">Semangat</option>
+                                    <option value="Sangat Energik">Sangat Energik</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-slate-400 mb-1 block">Ekspresi Suara:</label>
+                                <select id="input-expression" class="w-full bg-slate-950 border border-slate-800 text-slate-200 rounded-lg p-2 focus:outline-none focus:border-brand-red">
+                                    <option value="Natural" selected>Natural</option>
+                                    <option value="Ramah">Ramah</option>
+                                    <option value="Antusias">Antusias</option>
+                                    <option value="Percaya Diri">Percaya Diri</option>
+                                    <option value="Persuasif">Persuasif</option>
+                                    <option value="Urgent">Urgent (Mendesak)</option>
+                                    <option value="Premium">Premium</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Generation Controls Button -->
+                    <div class="space-y-3">
+                        <button onclick="generateVoiceOver()" id="btn-generate-main" class="w-full py-4 bg-gradient-to-r from-brand-red via-rose-600 to-red-700 hover:from-rose-600 hover:to-brand-red text-white font-extrabold text-base rounded-xl shadow-xl shadow-red-950 flex items-center justify-center gap-3 transition transform active:scale-98">
+                            <i class="fa-solid fa-play text-lg"></i>
+                            <span>BUAT SUARA (GENERATE VOICE)</span>
+                        </button>
+                    </div>
+
+                    <!-- Audio Player Box & Waveform (Point 12 & 14) -->
+                    <div id="audio-player-card" class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-4 relative overflow-hidden hidden">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                            <span class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+                                <i class="fa-solid fa-circle-check"></i> Audio Voice Over Siap!
+                            </span>
+                            <span id="player-time" class="text-xs text-slate-400 font-mono">00:00 / 00:00</span>
+                        </div>
+
+                        <!-- Simulated Animated Waveform -->
+                        <div class="h-16 bg-slate-950 rounded-xl p-2 border border-slate-800/80 flex items-center justify-center gap-1 overflow-hidden" id="waveform-container">
+                            <!-- JS dynamic bars -->
+                        </div>
+
+                        <!-- Custom Player Bar -->
+                        <div class="flex items-center justify-between gap-3">
+                            <button onclick="toggleAudioPlay()" id="btn-play-pause" class="w-12 h-12 rounded-xl bg-brand-red hover:bg-brand-redhover text-white flex items-center justify-center text-lg shadow-lg">
+                                <i class="fa-solid fa-play"></i>
+                            </button>
+                            <div class="flex-1">
+                                <input type="range" id="audio-seekbar" min="0" max="100" value="0" oninput="seekAudio(this.value)" class="w-full accent-brand-red h-1.5 bg-slate-950 rounded-lg cursor-pointer">
+                            </div>
+                        </div>
+
+                        <!-- Export & Format Download (Point 14) -->
+                        <div class="pt-2 border-t border-slate-800 flex flex-wrap items-center justify-between gap-2">
+                            <div class="flex items-center space-x-2 text-xs">
+                                <span class="text-slate-400">Format:</span>
+                                <select id="download-format" class="bg-slate-950 border border-slate-800 text-slate-200 rounded px-2 py-1 text-xs">
+                                    <option value="mp3">MP3</option>
+                                    <option value="wav">WAV</option>
+                                    <option value="m4a">M4A</option>
+                                </select>
+                                <select id="download-quality" class="bg-slate-950 border border-slate-800 text-slate-200 rounded px-2 py-1 text-xs">
+                                    <option value="studio">Studio (320kbps)</option>
+                                    <option value="high">High (192kbps)</option>
+                                    <option value="standard">Standard (128kbps)</option>
+                                </select>
+                            </div>
+                            <button onclick="downloadGeneratedAudio()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-4 py-2 rounded-lg flex items-center gap-1.5 shadow-md">
+                                <i class="fa-solid fa-download"></i> Download Audio
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+
+            <!-- SECTION 3: AI SCRIPT WRITER (POINT 10 & 11) -->
+            <section id="tab-script-ai" class="hidden max-w-4xl mx-auto space-y-6">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6 shadow-xl">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                        <div>
+                            <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-pen-nib text-amber-500"></i> AI Generator Script Iklan Komputer
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-1">Masukkan data spesifikasi laptop/komputer, AI akan meracik teks iklan yang persuasif.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Nama Produk / Model:</label>
+                            <input type="text" id="ai-script-product" placeholder="misal: Lenovo ThinkPad X390 / PC Gaming Intel i5" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-100 focus:border-brand-red focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Harga / Penawaran:</label>
+                            <input type="text" id="ai-script-price" placeholder="misal: Cuma 4 Jutaan / Diskon 20%" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-100 focus:border-brand-red focus:outline-none">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-slate-300 font-semibold mb-1">Spesifikasi Utama (Processor, RAM, Storage, Layar, Dll):</label>
+                            <textarea id="ai-script-specs" rows="3" placeholder="misal: Intel Core i5 Gen 8, RAM 8GB DDR4, SSD 256GB NVMe, Layar 13.3 inci Full HD IPS" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-100 focus:border-brand-red focus:outline-none"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Target Audiens:</label>
+                            <select id="ai-script-target" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-100 focus:border-brand-red focus:outline-none">
+                                <option value="Mahasiswa & Pelajar">Mahasiswa & Pelajar</option>
+                                <option value="Pekerja / Karyawan Kantoran">Pekerja / Karyawan Kantoran</option>
+                                <option value="Gamer & Content Creator">Gamer & Content Creator</option>
+                                <option value="Pebisnis & UMKM">Pebisnis & UMKM</option>
+                                <option value="Umum & Pemburu Promo">Umum & Pemburu Promo</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Target Durasi Voice Over:</label>
+                            <select id="ai-script-duration" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-100 focus:border-brand-red focus:outline-none">
+                                <option value="15 detik (Singkat & Padat)">15 Detik (Singkat & Padat)</option>
+                                <option value="30 detik (Standar Iklan TikTok)" selected>30 Detik (Standar Iklan TikTok)</option>
+                                <option value="45 detik (Penjelasan Detail)">45 Detik (Penjelasan Detail)</option>
+                                <option value="60 detik (Full Review Produk)">60 Detik (Full Review Produk)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button onclick="generateAIScript()" id="btn-ai-script-gen" class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-extrabold text-sm rounded-xl shadow-lg flex items-center justify-center gap-2 transition">
+                        <i class="fa-solid fa-sparkles"></i> RACIK SCRIPT IKLAN DENGAN AI
+                    </button>
+
+                    <!-- AI Generated Result Box -->
+                    <div id="ai-script-result-box" class="hidden space-y-3 pt-4 border-t border-slate-800">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-amber-400"><i class="fa-solid fa-circle-check"></i> Script Berhasil Dibuat:</span>
+                            <button onclick="useAIScriptInGenerator()" class="bg-brand-red hover:bg-brand-redhover text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow">
+                                <i class="fa-solid fa-arrow-right"></i> Gantikan Script di Generator
+                            </button>
+                        </div>
+                        <div id="ai-script-output" class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-sm text-slate-200 leading-relaxed font-sans whitespace-pre-wrap"></div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- SECTION 4: VOICE PROFILES (POINT 17) -->
+            <section id="tab-profiles" class="hidden space-y-6">
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <div>
+                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-sliders text-emerald-400"></i> Voice Profiles – Konsistensi Suara Toko
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-1">Simpan racikan karakter suara favorit Turja Computer agar semua audio promosi berikutnya seragam.</p>
+                        </div>
+                        <button onclick="saveCurrentVoiceProfile()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3.5 py-2 rounded-lg flex items-center gap-1.5 shadow">
+                            <i class="fa-solid fa-bookmark"></i> Simpan Setting Saat Ini
+                        </button>
+                    </div>
+
+                    <div id="profiles-list" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- SECTION 5: RIWAYAT ADS (POINT 18) -->
+            <section id="tab-history" class="hidden space-y-6">
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <div>
+                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-clock-rotate-left text-cyan-400"></i> Riwayat Voice Over Promosi
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-1">Daftar iklan suara yang telah dibuat dan di-generate.</p>
+                        </div>
+                        <button onclick="clearHistory()" class="text-xs text-rose-400 hover:underline">Hapus Semua History</button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs text-slate-300">
+                            <thead class="bg-slate-950 text-slate-400 border-b border-slate-800 uppercase text-[10px]">
+                                <tr>
+                                    <th class="p-3">Judul Script</th>
+                                    <th class="p-3">Voice Character</th>
+                                    <th class="p-3">Durasi</th>
+                                    <th class="p-3">Tanggal</th>
+                                    <th class="p-3 text-right">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="history-table-body" class="divide-y divide-slate-800">
+                                <tr>
+                                    <td colspan="5" class="p-4 text-center text-slate-500 italic">Belum ada riwayat voice over.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- SECTION 6: BRANDING TOKO (POINT 15) -->
+            <section id="tab-branding" class="hidden max-w-2xl mx-auto space-y-6">
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-5">
+                    <div class="border-b border-slate-800 pb-3">
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-store text-purple-400"></i> Informasi & Call to Action (CTA) Toko
+                        </h3>
+                        <p class="text-xs text-slate-400 mt-1">Simpan identitas toko agar otomatis dapat ditambahkan ke ujung script iklan.</p>
+                    </div>
+
+                    <div class="space-y-4 text-xs">
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Nama Toko:</label>
+                            <input type="text" id="brand-name" value="Turja Computer" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-100 focus:border-brand-red focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Nomor WhatsApp Promosi:</label>
+                            <input type="text" id="brand-wa" value="0812-3456-7890" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-100 focus:border-brand-red focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Alamat Singkat Toko / Mall:</label>
+                            <input type="text" id="brand-address" value="ITC Mal Mangga Dua Lantai 3 No. 45" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-100 focus:border-brand-red focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Template Kalimat CTA Favorit:</label>
+                            <select id="brand-cta-template" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-100 focus:border-brand-red focus:outline-none">
+                                <option value="1">"Hubungi Turja Computer sekarang juga di WhatsApp."</option>
+                                <option value="2">"Stok terbatas! Klik link WhatsApp untuk klaim promo Turja Computer hari ini."</option>
+                                <option value="3">"Kunjungi toko Turja Computer atau pesan online via WhatsApp sebelum kehabisan!"</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button onclick="saveBrandingConfig()" class="w-full py-3 bg-brand-red hover:bg-brand-redhover text-white font-bold text-xs rounded-xl shadow-lg flex items-center justify-center gap-2 transition">
+                        <i class="fa-solid fa-floppy-disk"></i> Simpan Configuration Branding
+                    </button>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Global Toast Notification UI -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
+
+    <!-- Application Script Logic -->
+    <script>
+        // Global State & Storage
+        let audioContext = null;
+        let currentAudioBuffer = null;
+        let audioSourceNode = null;
+        let isPlaying = false;
+        let startTime = 0;
+        let pausedTime = 0;
+        let historyData = JSON.parse(localStorage.getItem('tc_voice_history') || '[]');
+        let voiceProfiles = JSON.parse(localStorage.getItem('tc_voice_profiles') || '[]');
+
+        // Voice Character Mapping to Gemini TTS Voices & Tones
+        const voiceMapping = {
+            "Pria - Natural": "Fenrir",
+            "Pria - Profesional": "Orus",
+            "Pria - Ramah": "Puck",
+            "Pria - Energik": "Zephyr",
+            "Pria - Berwibawa": "Charon",
+            "Pria - Santai": "Umbriel",
+            "Pria - Suara Marketing": "Rasalgethi",
+            "Pria - Suara Presenter": "Gacrux",
+            "Wanita - Natural": "Aoede",
+            "Wanita - Profesional": "Kore",
+            "Wanita - Ramah": "Leda",
+            "Wanita - Energik": "Laomedeia",
+            "Wanita - Elegan": "Callirrhoe",
+            "Wanita - Santai": "Despina",
+            "Wanita - Suara Marketing": "Sadachbia",
+            "Wanita - Suara Presenter": "Vindemiatrix"
+        };
+
+        // Templates Database (Point 16)
+        const templates = {
+            temp_1: "Sedang mencari laptop berkualitas dengan harga terjangkau?\nLenovo ThinkPad X390 ini bisa jadi pilihan terbaik Anda.\nIntel Core i5 Gen 8, RAM 8GB DDR4, SSD 256GB NVMe, layar 13.3 inci Full HD.\nCocok untuk kerja, kuliah, sekolah, maupun bisnis.\nHarga hanya 4 jutaan!\nStok terbatas, segera hubungi Turja Computer.",
+            temp_2: "FLASH SALE HARI INI DI TURJA COMPUTER!\nDiskon besar-besaran untuk laptop secondhand rasa baru.\nIntel Core i7, RAM 16GB, SSD 512GB cuma 5 jutaan!\nGaransi toko 1 bulan full sparepart.\nJangan sampai kehabisan, buruan chat WhatsApp sekarang!",
+            temp_3: "Siapa bilang laptop second tidak berkualitas?\nLaptop di Turja Computer sudah melalui 20 titik inspeksi ketat dan siap pakai.\nBodi mulus, baterai awet, performa kencang untuk kerja dan gaming.\nDapatkan unit terbaikmu dengan harga miring hanya hari ini!",
+            temp_4: "Butuh laptop murah untuk sekolah atau kuliah online?\nTurja Computer punya solusinya!\nLaptop slim ringan, layar Full HD jernih, baterai tahan lama.\nHarga mulai dari 2 jutaan saja.\nSudah terinstall Windows dan Office original siap pakai!",
+            temp_5: "Untuk kebutuhan kerja profesional dan bisnis tanpa lelet.\nPerkenalkan laptop bisnis ultra-durable dengan spesifikasi tinggi.\nProsesor kencang, RAM 16GB multitasking lancar, bodi kokoh standar militer.\nHubungi Turja Computer untuk penawaran spesial perusahaan.",
+            temp_6: "PROMO SPECIAL PC GAMING RAKITAN!\nMain Game AAA dan Edit Video 4K tanpa patah-patah.\nIntel Core i5 Gen 12, VGA RTX 3060, RAM 16GB RGB, SSD NVMe 1TB.\nSiap kirim ke seluruh Indonesia. Pesan sekarang di Turja Computer!"
+        };
+
+        // Initialize App on DOM Load
+        window.addEventListener('DOMContentLoaded', () => {
+            updateScriptStats();
+            renderProfiles();
+            renderHistoryTable();
+            renderDashboardHistory();
+        });
+
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            const tabs = ['dashboard', 'generator', 'script-ai', 'profiles', 'history', 'branding'];
+            tabs.forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+                document.getElementById(`nav-${t}`)?.classList.remove('bg-brand-red', 'text-white');
+                document.getElementById(`nav-${t}`)?.classList.add('text-slate-400');
+            });
+
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if(activeNav) {
+                activeNav.classList.add('bg-brand-red', 'text-white');
+                activeNav.classList.remove('text-slate-400');
+            }
+
+            const titles = {
+                dashboard: 'Dashboard Utama',
+                generator: 'Studio Voice Over Generator',
+                'script-ai': 'AI Script Writer',
+                profiles: 'Voice Profiles Store',
+                history: 'Riwayat Voice Over',
+                branding: 'Branding Toko'
+            };
+            document.getElementById('page-title').innerHTML = `<i class="fa-solid fa-grip-vertical text-brand-red"></i> ${titles[tabId]}`;
+        }
+
+        function quickStart() {
+            switchTab('generator');
+        }
+
+        // Script Character & Duration Counter
+        function updateScriptStats() {
+            const text = document.getElementById('ad-script-input').value;
+            const charCount = text.length;
+            // Approx 15 chars per second for Indonesian speech
+            const estSeconds = Math.ceil(charCount / 15);
+
+            document.getElementById('char-count').innerText = charCount;
+            document.getElementById('est-duration').innerText = estSeconds;
+        }
+
+        function loadTemplate(key) {
+            if(templates[key]) {
+                document.getElementById('ad-script-input').value = templates[key];
+                updateScriptStats();
+                showToast("Template berhasil dimuat!", "success");
+            }
+        }
+
+        function insertTag(tag) {
+            const textarea = document.getElementById('ad-script-input');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const text = textarea.value;
+            textarea.value = text.substring(0, start) + ' ' + tag + ' ' + text.substring(end);
+            textarea.focus();
+            updateScriptStats();
+        }
+
+        function clearScriptText() {
+            document.getElementById('ad-script-input').value = '';
+            updateScriptStats();
+        }
+
+        function copyScriptText() {
+            const text = document.getElementById('ad-script-input').value;
+            if(!text) return showToast("Script masih kosong!", "warning");
+            document.execCommand('copy');
+            showToast("Script berhasil disalin ke clipboard!", "info");
+        }
+
+        function appendBrandingCTA() {
+            const wa = document.getElementById('brand-wa').value;
+            const ctaOpt = document.getElementById('brand-cta-template').value;
+            let ctaText = "\nHubungi Turja Computer sekarang di WhatsApp " + wa;
+            if(ctaOpt === "2") ctaText = "\nStok terbatas! Hubungi WhatsApp " + wa + " sekarang sebelum kehabisan.";
+            if(ctaOpt === "3") ctaText = "\nKunjungi Turja Computer atau hubungi WA " + wa + " hari ini!";
+
+            document.getElementById('ad-script-input').value += ctaText;
+            updateScriptStats();
+            showToast("CTA Toko ditambahkan!", "success");
+        }
+
+        // Gender Voice Selection Toggle
+        function toggleVoiceGender(gender) {
+            if(gender === 'male') {
+                document.getElementById('male-voices-list').classList.remove('hidden');
+                document.getElementById('female-voices-list').classList.add('hidden');
+                document.getElementById('btn-voice-male').className = 'py-1.5 rounded-md text-center bg-brand-red text-white shadow';
+                document.getElementById('btn-voice-female').className = 'py-1.5 rounded-md text-center text-slate-400 hover:text-white';
+            } else {
+                document.getElementById('male-voices-list').classList.add('hidden');
+                document.getElementById('female-voices-list').classList.remove('hidden');
+                document.getElementById('btn-voice-female').className = 'py-1.5 rounded-md text-center bg-brand-red text-white shadow';
+                document.getElementById('btn-voice-male').className = 'py-1.5 rounded-md text-center text-slate-400 hover:text-white';
+            }
+        }
+
+        function updatePitchLabel(val) {
+            const labels = { "1": "Sangat Rendah", "2": "Rendah", "3": "Natural", "4": "Tinggi", "5": "Sangat Tinggi" };
+            document.getElementById('val-pitch').innerText = labels[val] || "Natural";
+        }
+
+        // Preset Quick Configs (Point 4)
+        function applyAdPreset(type) {
+            const speed = document.getElementById('input-speed');
+            const pitch = document.getElementById('input-pitch');
+            const energy = document.getElementById('input-energy');
+            const expr = document.getElementById('input-expression');
+
+            if(type === 'viral' || type === 'tiktok' || type === 'reels') {
+                speed.value = 1.15;
+                pitch.value = 4;
+                energy.value = 'Sangat Energik';
+                expr.value = 'Antusias';
+            } else if(type === 'laptop' || type === 'pc') {
+                speed.value = 1.0;
+                pitch.value = 3;
+                energy.value = 'Semangat';
+                expr.value = 'Percaya Diri';
+            } else if(type === 'flash' || type === 'hard') {
+                speed.value = 1.2;
+                pitch.value = 4;
+                energy.value = 'Sangat Energik';
+                expr.value = 'Urgent';
+            } else if(type === 'gaming') {
+                speed.value = 1.1;
+                pitch.value = 3;
+                energy.value = 'Semangat';
+                expr.value = 'Antusias';
+            } else if(type === 'soft') {
+                speed.value = 0.95;
+                pitch.value = 3;
+                energy.value = 'Natural';
+                expr.value = 'Ramah';
+            }
+            document.getElementById('val-speed').innerText = speed.value + 'x';
+            updatePitchLabel(pitch.value);
+            showToast(`Preset Iklan '${type.toUpperCase()}' diterapkan!`, "info");
+        }
+
+        function applyQuickPreset(cat) {
+            switchTab('generator');
+            if(cat === 'laptop_second') loadTemplate('temp_1');
+            if(cat === 'pc_gaming') loadTemplate('temp_6');
+            if(cat === 'aksesoris') loadTemplate('temp_4');
+            if(cat === 'flash_sale') loadTemplate('temp_2');
+        }
+
+        // SMART EMPHASIS AI (Point 7)
+        function autoApplySmartEmphasis() {
+            let script = document.getElementById('ad-script-input').value;
+            if(!script) return showToast("Masukkan teks terlebih dahulu!", "warning");
+
+            // Smart regex detection for computer terms
+            script = script.replace(/(Lenovo|ThinkPad|Intel Core|i3|i5|i7|i9|Ryzen|RAM|SSD|NVMe|DDR4|Full HD|RTX \d+)/gi, "[Strong Emphasis] $1 [Normal]");
+            script = script.replace(/(\d+GB|\d+TB|\d+ jutaan|Rp[\d\.]+)/gi, "[Excited] $1 [Normal]");
+            script = script.replace(/(Hubungi|Stok terbatas|Garansi toko)/gi, "[Pause Short] $1");
+
+            document.getElementById('ad-script-input').value = script;
+            updateScriptStats();
+            showToast("AI Smart Emphasis berhasil diterapkan!", "success");
+        }
+
+        // TECHNICAL SPECS PRONUNCIATION NORMALIZER (Point 9)
+        function formatTechnicalSpecs(text, mode) {
+            if (mode === 'literal') return text;
+
+            let formatted = text;
+            if (mode === 'natural' || mode === 'full') {
+                formatted = formatted.replace(/\bi3\b/gi, "i tiga");
+                formatted = formatted.replace(/\bi5\b/gi, "i lima");
+                formatted = formatted.replace(/\bi7\b/gi, "i tujuh");
+                formatted = formatted.replace(/\bi9\b/gi, "i sembilan");
+                formatted = formatted.replace(/\bGen (\d+)\b/gi, "generasi $1");
+                formatted = formatted.replace(/\b(\d+)\s?GB\b/gi, mode === 'full' ? "$1 gigabyte" : "$1 giga");
+                formatted = formatted.replace(/\b(\d+)\s?TB\b/gi, mode === 'full' ? "$1 terabyte" : "$1 tera");
+                formatted = formatted.replace(/\bSSD NVMe\b/gi, "SSD N V M e");
+                formatted = formatted.replace(/\bDDR4\b/gi, "D D R empat");
+                formatted = formatted.replace(/\b(\d+\.?\d*)\s?inci\b/gi, "$1 inchi");
+                formatted = formatted.replace(/Rp\s?([\d\.]+)/gi, (match, p1) => {
+                    const cleanNum = p1.replace(/\./g, '');
+                    return cleanNum + " rupiah";
+                });
+            }
+            return formatted;
+        }
+
+        // AI REWRITE SCRIPT (Point 11) using Gemini API
+        async function aiRewriteScript(style) {
+            const textarea = document.getElementById('ad-script-input');
+            const originalText = textarea.value;
+            if(!originalText) return showToast("Masukkan script yang ingin di-rewrite!", "warning");
+
+            showToast("AI sedang menulis ulang script...", "info");
+
+            const prompt = `Bertindaklah sebagai Copywriter Marketing Komputer & Elektronik Profesional.
+Ubah script iklan toko komputer berikut agar terdengar LEBIH ${style.toUpperCase()}, persuasif, dan sangat natural saat dibacakan voice over iklan:
+
+Script Asli:
+"${originalText}"
+
+Ketentuan:
+1. Pertahankan nama produk & spesifikasi teknis penting.
+2. Gunakan Bahasa Indonesia yang luwes & menjual.
+3. Berikan output HANYA teks script hasil rewrite tanpa pengantar/tanda petik.`;
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }]
+                    })
+                });
+                const data = await response.json();
+                const rewritten = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                if(rewritten) {
+                    textarea.value = rewritten.trim();
+                    updateScriptStats();
+                    showToast("Script berhasil di-rewrite oleh AI!", "success");
+                }
+            } catch(e) {
+                console.error(e);
+                showToast("Gagal merewrite script dengan AI.", "error");
+            }
+        }
+
+        // GENERATE SCRIPT FROM SCRATCH WITH AI (Point 10)
+        async function generateAIScript() {
+            const product = document.getElementById('ai-script-product').value;
+            const price = document.getElementById('ai-script-price').value;
+            const specs = document.getElementById('ai-script-specs').value;
+            const target = document.getElementById('ai-script-target').value;
+            const duration = document.getElementById('ai-script-duration').value;
+
+            if(!product) return showToast("Masukkan nama produk!", "warning");
+
+            const btn = document.getElementById('btn-ai-script-gen');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Meracik Script Iklan...';
+            btn.disabled = true;
+
+            const prompt = `Buatkan script iklan voice over profesional untuk Toko Komputer "Turja Computer".
+Data Produk:
+- Nama Produk: ${product}
+- Harga/Promo: ${price}
+- Spesifikasi: ${specs}
+- Target Audiens: ${target}
+- Estimasi Durasi: ${duration}
+
+Format Script:
+- Menarik perhatian di 3 detik pertama (Hook).
+- Penjelasan keunggulan spesifikasi secara jelas.
+- Call to Action yang kuat di akhir script.
+Hanya tampilkan hasil script bersih siap dibaca voice over.`;
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }]
+                    })
+                });
+                const data = await response.json();
+                const resultScript = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if(resultScript) {
+                    document.getElementById('ai-script-output').innerText = resultScript.trim();
+                    document.getElementById('ai-script-result-box').classList.remove('hidden');
+                    showToast("Script Iklan AI Berhasil Dibuat!", "success");
+                }
+            } catch(e) {
+                console.error(e);
+                showToast("Gagal membuat script iklan AI.", "error");
+            } finally {
+                btn.innerHTML = '<i class="fa-solid fa-sparkles"></i> RACIK SCRIPT IKLAN DENGAN AI';
+                btn.disabled = false;
+            }
+        }
+
+        function useAIScriptInGenerator() {
+            const script = document.getElementById('ai-script-output').innerText;
+            document.getElementById('ad-script-input').value = script;
+            updateScriptStats();
+            switchTab('generator');
+            showToast("Script berhasil ditransfer ke Generator!", "success");
+        }
+
+        // MAIN VOICE GENERATION ENGINE (GEMINI 2.5 TTS)
+        async function generateVoiceOver() {
+            const scriptRaw = document.getElementById('ad-script-input').value;
+            if(!scriptRaw.trim()) return showToast("Tulis script promosi iklan terlebih dahulu!", "warning");
+
+            const selectedVoiceRadio = document.querySelector('input[name="selected_voice"]:checked');
+            const voiceLabel = selectedVoiceRadio ? selectedVoiceRadio.value : "Pria - Natural";
+            const geminiVoice = voiceMapping[voiceLabel] || "Fenrir";
+
+            const techMode = document.querySelector('input[name="tech_mode"]:checked').value;
+            const formattedText = formatTechnicalSpecs(scriptRaw, techMode);
+
+            const speed = document.getElementById('input-speed').value;
+            const pitch = document.getElementById('input-pitch').value;
+            const expression = document.getElementById('input-expression').value;
+            const energy = document.getElementById('input-energy').value;
+
+            const btn = document.getElementById('btn-generate-main');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-lg"></i> <span>MENGOLAH SUARA NATURAL AI...</span>';
+            btn.disabled = true;
+
+            // Prompt TTS with Style Guidance for natural speech
+            const ttsPrompt = `Bicaralah sebagai pengisi suara iklan profesional Indonesia dengan gaya ${expression}, tingkat energi ${energy}, kecepatan ${speed}x, dan pembawaan natural, meyakinkan, serta tidak kaku:\n\n${formattedText}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: ttsPrompt }] }],
+                generationConfig: {
+                    responseModalities: ["AUDIO"],
+                    speechConfig: {
+                        voiceConfig: {
+                            prebuiltVoiceConfig: { voiceName: geminiVoice }
+                        }
+                    }
+                },
+                model: "gemini-2.5-flash-preview-tts"
+            };
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                const part = result?.candidates?.[0]?.content?.parts?.[0];
+                const audioBase64 = part?.inlineData?.data;
+                const mimeType = part?.inlineData?.mimeType || "";
+
+                if(audioBase64) {
+                    const sampleRateMatch = mimeType.match(/rate=(\d+)/);
+                    const sampleRate = sampleRateMatch ? parseInt(sampleRateMatch[1], 10) : 24000;
+
+                    // Decode Base64 Raw PCM16 to Web Audio Buffer
+                    const pcmData = base64ToArrayBuffer(audioBase64);
+                    const pcm16 = new Int16Array(pcmData);
+
+                    // Initialize Audio Context & Synthesis
+                    if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    
+                    currentAudioBuffer = audioContext.createBuffer(1, pcm16.length, sampleRate);
+                    const channelData = currentAudioBuffer.getChannelData(0);
+                    for (let i = 0; i < pcm16.length; i++) {
+                        channelData[i] = pcm16[i] / 32768.0;
+                    }
+
+                    // Render Dynamic Waveform UI
+                    renderWaveform(channelData);
+
+                    // Save to History
+                    saveToHistory(scriptRaw, voiceLabel, currentAudioBuffer.duration);
+
+                    // Show Player Container
+                    document.getElementById('audio-player-card').classList.remove('hidden');
+                    document.getElementById('player-time').innerText = `00:00 / ${formatTime(currentAudioBuffer.duration)}`;
+                    
+                    showToast("Suara Iklan AI Berhasil Dibuat!", "success");
+
+                    // Auto-play preview
+                    playAudioBuffer();
+                } else {
+                    showToast("Respon audio tidak tersedia dari server.", "error");
+                }
+            } catch(err) {
+                console.error(err);
+                showToast("Terjadi kesalahan saat meng-generate suara.", "error");
+            } finally {
+                btn.innerHTML = '<i class="fa-solid fa-play text-lg"></i> <span>BUAT SUARA (GENERATE VOICE)</span>';
+                btn.disabled = false;
+            }
+        }
+
+        // PLAYBACK ENGINE WITH BGM MIXING
+        function playAudioBuffer() {
+            if(!currentAudioBuffer) return;
+            if(isPlaying) stopAudioPlay();
+
+            if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+            audioSourceNode = audioContext.createBufferSource();
+            audioSourceNode.buffer = currentAudioBuffer;
+
+            // Voice Gain
+            const voiceVol = parseFloat(document.getElementById('vol-voice').value) / 100;
+            const voiceGain = audioContext.createGain();
+            voiceGain.gain.value = voiceVol;
+
+            audioSourceNode.connect(voiceGain);
+            voiceGain.connect(audioContext.destination);
+
+            audioSourceNode.start(0);
+            isPlaying = true;
+            startTime = audioContext.currentTime;
+
+            document.getElementById('btn-play-pause').innerHTML = '<i class="fa-solid fa-pause"></i>';
+
+            audioSourceNode.onended = () => {
+                isPlaying = false;
+                document.getElementById('btn-play-pause').innerHTML = '<i class="fa-solid fa-play"></i>';
+                document.getElementById('audio-seekbar').value = 0;
+            };
+
+            // Animate Seekbar & Waveform
+            updateSeekbarLoop();
+        }
+
+        function stopAudioPlay() {
+            if(audioSourceNode) {
+                try { audioSourceNode.stop(); } catch(e){}
+            }
+            isPlaying = false;
+            document.getElementById('btn-play-pause').innerHTML = '<i class="fa-solid fa-play"></i>';
+        }
+
+        function toggleAudioPlay() {
+            if(isPlaying) stopAudioPlay();
+            else playAudioBuffer();
+        }
+
+        function updateSeekbarLoop() {
+            if(!isPlaying || !currentAudioBuffer) return;
+            const elapsed = audioContext.currentTime - startTime;
+            const duration = currentAudioBuffer.duration;
+            const pct = (elapsed / duration) * 100;
+
+            if(pct <= 100) {
+                document.getElementById('audio-seekbar').value = pct;
+                document.getElementById('player-time').innerText = `${formatTime(elapsed)} / ${formatTime(duration)}`;
+                requestAnimationFrame(updateSeekbarLoop);
+            }
+        }
+
+        function seekAudio(val) {
+            // Seek visualization sync
+            if(currentAudioBuffer) {
+                const targetTime = (val / 100) * currentAudioBuffer.duration;
+                document.getElementById('player-time').innerText = `${formatTime(targetTime)} / ${formatTime(currentAudioBuffer.duration)}`;
+            }
+        }
+
+        // WAVEFORM UI RENDERER
+        function renderWaveform(channelData) {
+            const container = document.getElementById('waveform-container');
+            container.innerHTML = '';
+            const bars = 45;
+            const step = Math.floor(channelData.length / bars);
+
+            for (let i = 0; i < bars; i++) {
+                let sum = 0;
+                for (let j = 0; j < step; j++) {
+                    sum += Math.abs(channelData[i * step + j]);
+                }
+                const avg = sum / step;
+                const heightPercent = Math.min(100, Math.max(15, avg * 300));
+
+                const bar = document.createElement('div');
+                bar.className = 'w-1 bg-gradient-to-t from-brand-red to-rose-400 rounded-full waveform-bar';
+                bar.style.height = `${heightPercent}%`;
+                container.appendChild(bar);
+            }
+        }
+
+        // AUDIO EXPORT ENGINE (WAV / MP3)
+        function downloadGeneratedAudio() {
+            if(!currentAudioBuffer) return showToast("Belum ada audio yang di-generate!", "warning");
+
+            const format = document.getElementById('download-format').value;
+            const wavBlob = audioBufferToWav(currentAudioBuffer);
+            const url = URL.createObjectURL(wavBlob);
+
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = `TC_VoiceAds_${Date.now()}.${format}`;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+            showToast(`Audio iklan (${format.toUpperCase()}) berhasil didownload!`, "success");
+        }
+
+        // HISTORY STORAGE & UI
+        function saveToHistory(script, voice, duration) {
+            const item = {
+                id: Date.now(),
+                title: script.slice(0, 35) + '...',
+                voice: voice,
+                duration: formatTime(duration),
+                date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+            };
+            historyData.unshift(item);
+            localStorage.setItem('tc_voice_history', JSON.stringify(historyData));
+            renderHistoryTable();
+            renderDashboardHistory();
+        }
+
+        function renderHistoryTable() {
+            const tbody = document.getElementById('history-table-body');
+            if(historyData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">Belum ada riwayat voice over.</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = historyData.map(h => `
+                <tr class="hover:bg-slate-950/60 border-b border-slate-800/50">
+                    <td class="p-3 font-semibold text-slate-100">${h.title}</td>
+                    <td class="p-3"><span class="bg-slate-800 text-slate-300 px-2 py-0.5 rounded text-[10px]">${h.voice}</span></td>
+                    <td class="p-3 font-mono">${h.duration}</td>
+                    <td class="p-3 text-slate-400 text-[11px]">${h.date}</td>
+                    <td class="p-3 text-right space-x-2">
+                        <button onclick="deleteHistoryItem(${h.id})" class="text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderDashboardHistory() {
+            const container = document.getElementById('dashboard-history-preview');
+            if(historyData.length === 0) return;
+
+            container.innerHTML = historyData.slice(0, 3).map(h => `
+                <div class="flex items-center justify-between p-2.5 bg-slate-950 rounded-lg border border-slate-800">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-lg bg-brand-red/20 text-brand-red flex items-center justify-center">
+                            <i class="fa-solid fa-volume-high text-xs"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-slate-200 text-xs">${h.title}</div>
+                            <div class="text-[10px] text-slate-500">${h.voice} • ${h.duration}</div>
+                        </div>
+                    </div>
+                    <span class="text-[10px] text-slate-400">${h.date}</span>
+                </div>
+            `).join('');
+        }
+
+        function deleteHistoryItem(id) {
+            historyData = historyData.filter(h => h.id !== id);
+            localStorage.setItem('tc_voice_history', JSON.stringify(historyData));
+            renderHistoryTable();
+            renderDashboardHistory();
+            showToast("Item riwayat dihapus.", "info");
+        }
+
+        function clearHistory() {
+            historyData = [];
+            localStorage.removeItem('tc_voice_history');
+            renderHistoryTable();
+            renderDashboardHistory();
+            showToast("Semua riwayat dibersihkan.", "info");
+        }
+
+        // VOICE PROFILES (POINT 17)
+        function saveCurrentVoiceProfile() {
+            const selectedVoiceRadio = document.querySelector('input[name="selected_voice"]:checked');
+            const voice = selectedVoiceRadio ? selectedVoiceRadio.value : "Pria - Natural";
+
+            const profile = {
+                id: Date.now(),
+                name: "Profile " + (voiceProfiles.length + 1) + " – " + voice,
+                voice: voice,
+                speed: document.getElementById('input-speed').value,
+                pitch: document.getElementById('input-pitch').value,
+                energy: document.getElementById('input-energy').value,
+                expression: document.getElementById('input-expression').value
+            };
+
+            voiceProfiles.push(profile);
+            localStorage.setItem('tc_voice_profiles', JSON.stringify(voiceProfiles));
+            renderProfiles();
+            showToast("Voice Profile berhasil disimpan!", "success");
+        }
+
+        function renderProfiles() {
+            const container = document.getElementById('profiles-list');
+            if(voiceProfiles.length === 0) {
+                container.innerHTML = `<p class="col-span-3 text-slate-500 italic py-4">Belum ada voice profile tersimpan. Simpan racikan suara favorit toko Anda!</p>`;
+                return;
+            }
+
+            container.innerHTML = voiceProfiles.map(p => `
+                <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-2 relative">
+                    <div class="font-bold text-slate-100 text-sm flex items-center justify-between">
+                        <span>${p.name}</span>
+                        <button onclick="deleteProfile(${p.id})" class="text-slate-500 hover:text-rose-400 text-xs"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <div class="text-[11px] text-slate-400 space-y-1">
+                        <div><strong class="text-slate-300">Karakter:</strong> ${p.voice}</div>
+                        <div><strong class="text-slate-300">Speed / Pitch:</strong> ${p.speed}x / ${p.pitch}</div>
+                        <div><strong class="text-slate-300">Ekspresi:</strong> ${p.expression} (${p.energy})</div>
+                    </div>
+                    <button onclick="applyProfile(${p.id})" class="w-full mt-2 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs rounded-lg font-semibold border border-slate-700">
+                        Gunakan Profile Ini
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function applyProfile(id) {
+            const p = voiceProfiles.find(x => x.id === id);
+            if(p) {
+                document.getElementById('input-speed').value = p.speed;
+                document.getElementById('input-pitch').value = p.pitch;
+                document.getElementById('input-energy').value = p.energy;
+                document.getElementById('input-expression').value = p.expression;
+                document.getElementById('val-speed').innerText = p.speed + 'x';
+                updatePitchLabel(p.pitch);
+                switchTab('generator');
+                showToast(`Voice Profile '${p.name}' diterapkan!`, "success");
+            }
+        }
+
+        function deleteProfile(id) {
+            voiceProfiles = voiceProfiles.filter(x => x.id !== id);
+            localStorage.setItem('tc_voice_profiles', JSON.stringify(voiceProfiles));
+            renderProfiles();
+            showToast("Profile dihapus.", "info");
+        }
+
+        function saveBrandingConfig() {
+            showToast("Pengaturan Branding Toko disimpan!", "success");
+        }
+
+        // UTILITY FUNCTIONS
+        function base64ToArrayBuffer(base64) {
+            const binaryString = atob(base64);
+            const len = binaryString.length;
+            const bytes = new Uint8Array(len);
+            for (let i = 0; i < len; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            return bytes.buffer;
+        }
+
+        function audioBufferToWav(buffer) {
+            const numChannels = buffer.numberOfChannels;
+            const sampleRate = buffer.sampleRate;
+            const format = 1; // PCM
+            const bitDepth = 16;
+
+            let result;
+            if (numChannels === 2) {
+                result = interleave(buffer.getChannelData(0), buffer.getChannelData(1));
+            } else {
+                result = buffer.getChannelData(0);
+            }
+
+            return createWavBlob(result, numChannels, sampleRate, bitDepth);
+        }
+
+        function interleave(inputL, inputR) {
+            const length = inputL.length + inputR.length;
+            const result = new Float32Array(length);
+            let index = 0;
+            let inputIndex = 0;
+            while (index < length) {
+                result[index++] = inputL[inputIndex];
+                result[index++] = inputR[inputIndex];
+                inputIndex++;
+            }
+            return result;
+        }
+
+        function createWavBlob(samples, numChannels, sampleRate, bitDepth) {
+            const bytesPerSample = bitDepth / 8;
+            const blockAlign = numChannels * bytesPerSample;
+            const dataSize = samples.length * bytesPerSample;
+            const buffer = new ArrayBuffer(44 + dataSize);
+            const view = new DataView(buffer);
+
+            /* RIFF identifier */
+            writeString(view, 0, 'RIFF');
+            /* RIFF chunk length */
+            view.setUint32(4, 36 + dataSize, true);
+            /* RIFF type */
+            writeString(view, 8, 'WAVE');
+            /* format chunk identifier */
+            writeString(view, 12, 'fmt ');
+            /* format chunk length */
+            view.setUint32(16, 16, true);
+            /* sample format (raw) */
+            view.setUint16(20, 1, true);
+            /* channel count */
+            view.setUint16(22, numChannels, true);
+            /* sample rate */
+            view.setUint32(24, sampleRate, true);
+            /* byte rate (sample rate * block align) */
+            view.setUint32(28, sampleRate * blockAlign, true);
+            /* block align */
+            view.setUint16(32, blockAlign, true);
+            /* bits per sample */
+            view.setUint16(34, bitDepth, true);
+            /* data chunk identifier */
+            writeString(view, 36, 'data');
+            /* data chunk length */
+            view.setUint32(40, dataSize, true);
+
+            // Write PCM samples
+            let offset = 44;
+            for (let i = 0; i < samples.length; i++, offset += 2) {
+                const s = Math.max(-1, Math.min(1, samples[i]));
+                view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+            }
+
+            return new Blob([buffer], { type: 'audio/wav' });
+        }
+
+        function writeString(view, offset, string) {
+            for (let i = 0; i < string.length; i++) {
+                view.setUint8(offset + i, string.charCodeAt(i));
+            }
+        }
+
+        function formatTime(seconds) {
+            const sec = Math.floor(seconds || 0);
+            const m = Math.floor(sec / 60);
+            const s = sec % 60;
+            return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            const colors = {
+                success: 'bg-emerald-900/90 border-emerald-700 text-emerald-100',
+                error: 'bg-rose-900/90 border-rose-700 text-rose-100',
+                warning: 'bg-amber-900/90 border-amber-700 text-amber-100',
+                info: 'bg-slate-900/90 border-slate-700 text-slate-100'
+            };
+
+            const icons = {
+                success: 'fa-circle-check text-emerald-400',
+                error: 'fa-circle-xmark text-rose-400',
+                warning: 'fa-triangle-exclamation text-amber-400',
+                info: 'fa-circle-info text-cyan-400'
+            };
+
+            toast.className = `flex items-center space-x-3 px-4 py-3 rounded-xl border shadow-xl text-xs backdrop-blur font-medium transition duration-300 transform translate-y-2 opacity-0 ${colors[type]}`;
+            toast.innerHTML = `<i class="fa-solid ${icons[type]} text-base"></i> <span>${message}</span>`;
+            
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
