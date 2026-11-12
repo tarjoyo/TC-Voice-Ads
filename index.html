@@ -106,6 +106,10 @@
                     <i class="fa-solid fa-store w-5 text-center text-purple-500"></i>
                     <span>Branding Toko</span>
                 </button>
+                <button onclick="switchTab('settings')" id="nav-settings" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-sm text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
+                    <i class="fa-solid fa-key w-5 text-center text-rose-500"></i>
+                    <span>API Key & Settings</span>
+                </button>
             </nav>
         </div>
 
@@ -129,7 +133,11 @@
                     <i class="fa-solid fa-grip-vertical text-brand-red"></i> Dashboard Utama
                 </h2>
             </div>
-            <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-3">
+                <button onclick="switchTab('settings')" id="api-status-badge" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs px-3 py-2 rounded-lg flex items-center gap-2 transition">
+                    <span class="w-2 h-2 rounded-full bg-amber-500" id="api-status-dot"></span>
+                    <span id="api-status-text" class="text-slate-300">Cek API Key</span>
+                </button>
                 <button onclick="quickStart()" class="bg-gradient-to-r from-brand-red to-rose-600 hover:opacity-90 text-white font-medium text-xs px-4 py-2.5 rounded-lg shadow-lg flex items-center gap-2 transition">
                     <i class="fa-solid fa-bolt"></i> Quick Ad Generator
                 </button>
@@ -621,9 +629,9 @@ Stok terbatas, segera hubungi Turja Computer."></textarea>
 
                     <!-- Main Generation Controls Button -->
                     <div class="space-y-3">
-                        <button onclick="generateVoiceOver()" id="btn-generate-main" class="w-full py-4 bg-gradient-to-r from-brand-red via-rose-600 to-red-700 hover:from-rose-600 hover:to-brand-red text-white font-extrabold text-base rounded-xl shadow-xl shadow-red-950 flex items-center justify-center gap-3 transition transform active:scale-98">
+                        <button onclick="generateVoiceOver()" id="btn-generate-main" class="w-full py-4 bg-gradient-to-r from-brand-red via-rose-600 to-red-700 hover:from-rose-600 hover:to-brand-red text-white font-extrabold text-base rounded-xl shadow-xl shadow-red-950 flex items-center justify-center gap-3 transition-all duration-200 transform active:scale-95 disabled:opacity-80 disabled:cursor-not-allowed">
                             <i class="fa-solid fa-play text-lg"></i>
-                            <span>BUAT SUARA (GENERATE VOICE)</span>
+                            <span>BUAT SUARA</span>
                         </button>
                     </div>
 
@@ -836,6 +844,51 @@ Stok terbatas, segera hubungi Turja Computer."></textarea>
                 </div>
             </section>
 
+            <!-- SECTION 7: API KEY & SETTINGS (UNTUK VERCEL / HOSTING MANDIRI) -->
+            <section id="tab-settings" class="hidden max-w-2xl mx-auto space-y-6">
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-5 shadow-xl">
+                    <div class="border-b border-slate-800 pb-3">
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-key text-rose-500"></i> Konfigurasi Gemini API Key
+                        </h3>
+                        <p class="text-xs text-slate-400 mt-1">Wajib diisi jika aplikasi di-hosting secara mandiri (seperti di Vercel, GitHub Pages, atau Netlify).</p>
+                    </div>
+
+                    <div class="bg-amber-950/40 border border-amber-800/50 rounded-xl p-4 text-xs text-amber-200 space-y-2">
+                        <div class="font-bold flex items-center gap-1.5 text-amber-400">
+                            <i class="fa-solid fa-circle-info"></i> Mengapa harus memasukkan API Key?
+                        </div>
+                        <p class="leading-relaxed text-amber-200/90">
+                            Di luar lingkungan preview, browser membutuhkan kunci akses resmi dari Google AI Studio untuk memproses suara AI (Gemini TTS) dan pembuatan script otomatis. Kunci ini hanya disimpan secara lokal di browser Anda (aman & tidak dikirim ke server lain).
+                        </p>
+                    </div>
+
+                    <div class="space-y-4 text-xs">
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Masukkan Google Gemini API Key Anda:</label>
+                            <div class="relative">
+                                <input type="password" id="gemini-api-key-input" placeholder="AIzaSy..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 pr-20 text-slate-100 focus:border-brand-red focus:outline-none font-mono">
+                                <button onclick="toggleApiKeyVisibility()" type="button" class="absolute right-3 top-2.5 text-slate-400 hover:text-white text-xs px-2 py-1">
+                                    <i class="fa-solid fa-eye" id="eye-icon"></i>
+                                </button>
+                            </div>
+                            <p class="text-[11px] text-slate-400 mt-2">
+                                Belum punya API Key? Dapatkan gratis di <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-brand-red hover:underline font-semibold">Google AI Studio <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i></a>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3">
+                        <button onclick="saveGeminiApiKey()" class="flex-1 py-3 bg-brand-red hover:bg-brand-redhover text-white font-bold text-xs rounded-xl shadow-lg flex items-center justify-center gap-2 transition">
+                            <i class="fa-solid fa-floppy-disk"></i> Simpan API Key
+                        </button>
+                        <button onclick="clearGeminiApiKey()" class="px-4 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs rounded-xl border border-slate-700 transition">
+                            Hapus Key
+                        </button>
+                    </div>
+                </div>
+            </section>
+
         </div>
     </main>
 
@@ -890,11 +943,65 @@ Stok terbatas, segera hubungi Turja Computer."></textarea>
             renderProfiles();
             renderHistoryTable();
             renderDashboardHistory();
+            checkApiKeyStatus();
         });
+
+        // API Key Management for Vercel / Self-Hosting
+        function getActiveApiKey() {
+            return localStorage.getItem('tc_gemini_api_key') || "";
+        }
+
+        function checkApiKeyStatus() {
+            const key = getActiveApiKey();
+            const input = document.getElementById('gemini-api-key-input');
+            const dot = document.getElementById('api-status-dot');
+            const text = document.getElementById('api-status-text');
+
+            if (input) input.value = key;
+
+            if (key && key.trim().length > 10) {
+                dot.className = "w-2 h-2 rounded-full bg-emerald-500";
+                text.innerText = "API Key Aktif";
+                text.className = "text-emerald-400 font-medium";
+            } else {
+                dot.className = "w-2 h-2 rounded-full bg-amber-500 animate-pulse";
+                text.innerText = "Set API Key";
+                text.className = "text-amber-400 font-medium";
+            }
+        }
+
+        function saveGeminiApiKey() {
+            const val = document.getElementById('gemini-api-key-input').value.trim();
+            if (!val) {
+                return showToast("Masukkan API Key yang valid!", "warning");
+            }
+            localStorage.setItem('tc_gemini_api_key', val);
+            checkApiKeyStatus();
+            showToast("Gemini API Key berhasil disimpan!", "success");
+        }
+
+        function clearGeminiApiKey() {
+            localStorage.removeItem('tc_gemini_api_key');
+            document.getElementById('gemini-api-key-input').value = '';
+            checkApiKeyStatus();
+            showToast("API Key dihapus.", "info");
+        }
+
+        function toggleApiKeyVisibility() {
+            const input = document.getElementById('gemini-api-key-input');
+            const icon = document.getElementById('eye-icon');
+            if (input.type === "password") {
+                input.type = "text";
+                icon.className = "fa-solid fa-eye-slash";
+            } else {
+                input.type = "password";
+                icon.className = "fa-solid fa-eye";
+            }
+        }
 
         // Tab Switching Logic
         function switchTab(tabId) {
-            const tabs = ['dashboard', 'generator', 'script-ai', 'profiles', 'history', 'branding'];
+            const tabs = ['dashboard', 'generator', 'script-ai', 'profiles', 'history', 'branding', 'settings'];
             tabs.forEach(t => {
                 document.getElementById(`tab-${t}`).classList.add('hidden');
                 document.getElementById(`nav-${t}`)?.classList.remove('bg-brand-red', 'text-white');
@@ -914,7 +1021,8 @@ Stok terbatas, segera hubungi Turja Computer."></textarea>
                 'script-ai': 'AI Script Writer',
                 profiles: 'Voice Profiles Store',
                 history: 'Riwayat Voice Over',
-                branding: 'Branding Toko'
+                branding: 'Branding Toko',
+                settings: 'API Key & Settings'
             };
             document.getElementById('page-title').innerHTML = `<i class="fa-solid fa-grip-vertical text-brand-red"></i> ${titles[tabId]}`;
         }
@@ -1087,6 +1195,7 @@ Stok terbatas, segera hubungi Turja Computer."></textarea>
             const originalText = textarea.value;
             if(!originalText) return showToast("Masukkan script yang ingin di-rewrite!", "warning");
 
+            const apiKey = getActiveApiKey();
             showToast("AI sedang menulis ulang script...", "info");
 
             const prompt = `Bertindaklah sebagai Copywriter Marketing Komputer & Elektronik Profesional.
@@ -1101,7 +1210,7 @@ Ketentuan:
 3. Berikan output HANYA teks script hasil rewrite tanpa pengantar/tanda petik.`;
 
             try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=`, {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
@@ -1109,6 +1218,9 @@ Ketentuan:
                     })
                 });
                 const data = await response.json();
+                if (data.error) {
+                    throw new Error(data.error.message || "API Key tidak valid");
+                }
                 const rewritten = data.candidates?.[0]?.content?.parts?.[0]?.text;
                 if(rewritten) {
                     textarea.value = rewritten.trim();
@@ -1117,7 +1229,7 @@ Ketentuan:
                 }
             } catch(e) {
                 console.error(e);
-                showToast("Gagal merewrite script dengan AI.", "error");
+                showToast("Gagal rewrite: " + e.message + " (Cek menu API Key)", "error");
             }
         }
 
@@ -1131,6 +1243,7 @@ Ketentuan:
 
             if(!product) return showToast("Masukkan nama produk!", "warning");
 
+            const apiKey = getActiveApiKey();
             const btn = document.getElementById('btn-ai-script-gen');
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Meracik Script Iklan...';
             btn.disabled = true;
@@ -1150,7 +1263,7 @@ Format Script:
 Hanya tampilkan hasil script bersih siap dibaca voice over.`;
 
             try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=`, {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
@@ -1158,6 +1271,9 @@ Hanya tampilkan hasil script bersih siap dibaca voice over.`;
                     })
                 });
                 const data = await response.json();
+                if (data.error) {
+                    throw new Error(data.error.message || "API Key diperlukan");
+                }
                 const resultScript = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
                 if(resultScript) {
@@ -1167,7 +1283,7 @@ Hanya tampilkan hasil script bersih siap dibaca voice over.`;
                 }
             } catch(e) {
                 console.error(e);
-                showToast("Gagal membuat script iklan AI.", "error");
+                showToast("Gagal membuat script: " + e.message + " (Cek API Key)", "error");
             } finally {
                 btn.innerHTML = '<i class="fa-solid fa-sparkles"></i> RACIK SCRIPT IKLAN DENGAN AI';
                 btn.disabled = false;
@@ -1187,6 +1303,7 @@ Hanya tampilkan hasil script bersih siap dibaca voice over.`;
             const scriptRaw = document.getElementById('ad-script-input').value;
             if(!scriptRaw.trim()) return showToast("Tulis script promosi iklan terlebih dahulu!", "warning");
 
+            const apiKey = getActiveApiKey();
             const selectedVoiceRadio = document.querySelector('input[name="selected_voice"]:checked');
             const voiceLabel = selectedVoiceRadio ? selectedVoiceRadio.value : "Pria - Natural";
             const geminiVoice = voiceMapping[voiceLabel] || "Fenrir";
@@ -1200,8 +1317,19 @@ Hanya tampilkan hasil script bersih siap dibaca voice over.`;
             const energy = document.getElementById('input-energy').value;
 
             const btn = document.getElementById('btn-generate-main');
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-lg"></i> <span>MENGOLAH SUARA NATURAL AI...</span>';
+            // Gunakan SVG spinner kustom agar animasi selalu berputar mulus dan tambahkan efek animate-pulse
+            btn.classList.add('animate-pulse', 'ring-2', 'ring-rose-400/50');
+            btn.innerHTML = `
+                <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>MENGOLAH SUARA NATURAL AI...</span>
+            `;
             btn.disabled = true;
+
+            // Beri jeda 50ms agar browser sempat me-render animasi tombol sebelum fetch berjalan
+            await new Promise(resolve => setTimeout(resolve, 50));
 
             // Prompt TTS with Style Guidance for natural speech
             const ttsPrompt = `Bicaralah sebagai pengisi suara iklan profesional Indonesia dengan gaya ${expression}, tingkat energi ${energy}, kecepatan ${speed}x, dan pembawaan natural, meyakinkan, serta tidak kaku:\n\n${formattedText}`;
@@ -1220,12 +1348,22 @@ Hanya tampilkan hasil script bersih siap dibaca voice over.`;
             };
 
             try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=`, {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
                 const result = await response.json();
+
+                if (result.error) {
+                    if (result.error.code === 400 || result.error.code === 403 || !apiKey) {
+                        showToast("API Key belum diisi atau tidak valid! Buka menu 'API Key & Settings'.", "error");
+                        switchTab('settings');
+                        return;
+                    }
+                    throw new Error(result.error.message);
+                }
+
                 const part = result?.candidates?.[0]?.content?.parts?.[0];
                 const audioBase64 = part?.inlineData?.data;
                 const mimeType = part?.inlineData?.mimeType || "";
@@ -1262,13 +1400,14 @@ Hanya tampilkan hasil script bersih siap dibaca voice over.`;
                     // Auto-play preview
                     playAudioBuffer();
                 } else {
-                    showToast("Respon audio tidak tersedia dari server.", "error");
+                    showToast("Respon audio kosong. Pastikan API Key memiliki akses ke model Gemini 2.5 TTS.", "error");
                 }
             } catch(err) {
                 console.error(err);
-                showToast("Terjadi kesalahan saat meng-generate suara.", "error");
+                showToast("Error: " + (err.message || "Gagal menghubungi server Gemini."), "error");
             } finally {
-                btn.innerHTML = '<i class="fa-solid fa-play text-lg"></i> <span>BUAT SUARA (GENERATE VOICE)</span>';
+                btn.classList.remove('animate-pulse', 'ring-2', 'ring-rose-400/50');
+                btn.innerHTML = '<i class="fa-solid fa-play text-lg"></i> <span>BUAT SUARA</span>';
                 btn.disabled = false;
             }
         }
