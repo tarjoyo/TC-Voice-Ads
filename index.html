@@ -1052,6 +1052,10 @@ Stok terbatas, segera hubungi Turja Computer."></textarea>
                 dot.className = "w-2 h-2 rounded-full bg-emerald-500";
                 text.innerText = gsheetUrl ? "API & Sheet Aktif" : "API Key Aktif";
                 text.className = "text-emerald-400 font-medium";
+            } else if (gsheetUrl) {
+                dot.className = "w-2 h-2 rounded-full bg-cyan-500";
+                text.innerText = "Sheet Aktif (Set API)";
+                text.className = "text-cyan-400 font-medium";
             } else {
                 dot.className = "w-2 h-2 rounded-full bg-amber-500 animate-pulse";
                 text.innerText = "Set API / Sheet";
@@ -1063,11 +1067,20 @@ Stok terbatas, segera hubungi Turja Computer."></textarea>
             const val = document.getElementById('gemini-api-key-input').value.trim();
             const gsheetVal = document.getElementById('gsheet-webapp-url').value.trim();
 
+            if (!val && !gsheetVal) {
+                return showToast("Masukkan API Key atau URL Google Apps Script terlebih dahulu!", "warning");
+            }
+
             if (val) localStorage.setItem('tc_gemini_api_key', val);
-            if (gsheetVal) localStorage.setItem('tc_gsheet_url', gsheetVal);
+            if (gsheetVal) {
+                if (!gsheetVal.includes('/exec')) {
+                    return showToast("URL Web App harus berakhiran '/exec'!", "error");
+                }
+                localStorage.setItem('tc_gsheet_url', gsheetVal);
+            }
 
             checkApiKeyStatus();
-            showToast("Konfigurasi API & Google Sheet disimpan!", "success");
+            showToast("Konfigurasi API & Google Sheet berhasil disimpan!", "success");
             if (gsheetVal) syncAllFromGoogleSheet(true);
         }
 
@@ -1078,42 +1091,6 @@ Stok terbatas, segera hubungi Turja Computer."></textarea>
             document.getElementById('gsheet-webapp-url').value = '';
             checkApiKeyStatus();
             showToast("Konfigurasi direset.", "info");
-        }
-
-        function checkApiKeyStatus() {
-            const key = getActiveApiKey();
-            const input = document.getElementById('gemini-api-key-input');
-            const dot = document.getElementById('api-status-dot');
-            const text = document.getElementById('api-status-text');
-
-            if (input) input.value = key;
-
-            if (key && key.trim().length > 10) {
-                dot.className = "w-2 h-2 rounded-full bg-emerald-500";
-                text.innerText = "API Key Aktif";
-                text.className = "text-emerald-400 font-medium";
-            } else {
-                dot.className = "w-2 h-2 rounded-full bg-amber-500 animate-pulse";
-                text.innerText = "Set API Key";
-                text.className = "text-amber-400 font-medium";
-            }
-        }
-
-        function saveGeminiApiKey() {
-            const val = document.getElementById('gemini-api-key-input').value.trim();
-            if (!val) {
-                return showToast("Masukkan API Key yang valid!", "warning");
-            }
-            localStorage.setItem('tc_gemini_api_key', val);
-            checkApiKeyStatus();
-            showToast("Gemini API Key berhasil disimpan!", "success");
-        }
-
-        function clearGeminiApiKey() {
-            localStorage.removeItem('tc_gemini_api_key');
-            document.getElementById('gemini-api-key-input').value = '';
-            checkApiKeyStatus();
-            showToast("API Key dihapus.", "info");
         }
 
         function toggleApiKeyVisibility() {
@@ -1746,35 +1723,6 @@ Hanya tampilkan hasil script bersih siap dibaca voice over.`;
             renderProfiles();
             postToGoogleSheet({ action: 'addProfile', profile: profile });
             showToast("Voice Profile berhasil disimpan ke Google Sheet!", "success");
-        }
-
-        function clearHistory() {
-            historyData = [];
-            localStorage.removeItem('tc_voice_history');
-            renderHistoryTable();
-            renderDashboardHistory();
-            showToast("Semua riwayat dibersihkan.", "info");
-        }
-
-        // VOICE PROFILES (POINT 17)
-        function saveCurrentVoiceProfile() {
-            const selectedVoiceRadio = document.querySelector('input[name="selected_voice"]:checked');
-            const voice = selectedVoiceRadio ? selectedVoiceRadio.value : "Pria - Natural";
-
-            const profile = {
-                id: Date.now(),
-                name: "Profile " + (voiceProfiles.length + 1) + " – " + voice,
-                voice: voice,
-                speed: document.getElementById('input-speed').value,
-                pitch: document.getElementById('input-pitch').value,
-                energy: document.getElementById('input-energy').value,
-                expression: document.getElementById('input-expression').value
-            };
-
-            voiceProfiles.push(profile);
-            localStorage.setItem('tc_voice_profiles', JSON.stringify(voiceProfiles));
-            renderProfiles();
-            showToast("Voice Profile berhasil disimpan!", "success");
         }
 
         function renderProfiles() {
