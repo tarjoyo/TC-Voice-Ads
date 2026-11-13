@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Voice Generator</title>
+    <title>TC Voice Ads – AI Voice Generator</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome Icons -->
@@ -68,7 +68,7 @@
     <aside class="w-full md:w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between shrink-0 z-30">
         <div>
             <!-- Logo Brand -->
-            <div class="p-5 flex items-center justify-between border-b border-slate-800">
+            <div class="p-5 flex items-center justify-between">
                 <div class="flex items-center space-x-3">
                     <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-red to-rose-500 flex items-center justify-center text-white font-extrabold text-xl shadow-lg shadow-red-900/40">
                         <i class="fa-solid fa-microphone-lines"></i>
@@ -82,7 +82,7 @@
 
             <!-- Nav Links -->
             <nav class="p-3 space-y-1">
-                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-sm transition-all bg-brand-red text-white shadow-md shadow-red-950">
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-sm transition-all bg-brand-red text-white">
                     <i class="fa-solid fa-house w-5 text-center"></i>
                     <span>Dashboard</span>
                 </button>
@@ -131,7 +131,7 @@
     <main class="flex-1 bg-slate-950 flex flex-col h-screen overflow-y-auto relative">
 
         <!-- Top Header Status Bar -->
-        <header class="bg-slate-900/80 backdrop-blur border-b border-slate-800 px-6 py-4 flex items-center justify-between sticky top-0 z-20">
+        <header class="bg-slate-950/90 backdrop-blur px-6 py-4 flex items-center justify-between sticky top-0 z-20 w-full">
             <div class="flex items-center space-x-3">
                 <h2 id="page-title" class="text-xl font-bold text-white flex items-center gap-2">
                     <i class="fa-solid fa-grip-vertical text-brand-red"></i> Dashboard Utama
@@ -141,9 +141,6 @@
                 <button onclick="switchTab('settings')" id="api-status-badge" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs px-3 py-2 rounded-lg flex items-center gap-2 transition">
                     <span class="w-2 h-2 rounded-full bg-amber-500" id="api-status-dot"></span>
                     <span id="api-status-text" class="text-slate-300">Cek API Key</span>
-                </button>
-                <button onclick="quickStart()" class="bg-gradient-to-r from-brand-red to-rose-600 hover:opacity-90 text-white font-medium text-xs px-4 py-2.5 rounded-lg shadow-lg flex items-center gap-2 transition">
-                    <i class="fa-solid fa-bolt"></i> Quick Ad Generator
                 </button>
             </div>
         </header>
@@ -844,7 +841,7 @@ Stok terbatas, segera hubungi Turja Computer."></textarea>
                         <table class="w-full text-left text-xs text-slate-300">
                             <thead class="bg-slate-950 text-slate-400 border-b border-slate-800 uppercase text-[10px]">
                                 <tr>
-                                    <th class="p-3">Judul & Audio Preview</th>
+                                    <th class="p-3">Judul Script</th>
                                     <th class="p-3">Voice Character</th>
                                     <th class="p-3">Durasi</th>
                                     <th class="p-3">Tanggal</th>
@@ -940,29 +937,14 @@ Stok terbatas, segera hubungi Turja Computer."></textarea>
                         </div>
 
                         <!-- Konfigurasi Google Apps Script Web App URL -->
-                        <div class="pt-4 border-t border-slate-800 space-y-3">
-                            <div>
-                                <div class="flex items-center justify-between mb-1">
-                                    <label class="text-slate-300 font-semibold flex items-center gap-1.5">
-                                        <i class="fa-solid fa-database text-emerald-500"></i> Google Spreadsheet ID:
-                                    </label>
-                                    <span id="sheet-connection-badge" class="inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-950/80 text-emerald-400 border border-emerald-700/50">
-                                        <span id="sheet-connection-dot" class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                                        <span id="sheet-connection-text">ID Spreadsheet Terhubung</span>
-                                    </span>
-                                </div>
-                                <input type="text" id="gsheet-spreadsheet-id" oninput="updateSpreadsheetBadge()" placeholder="1S43Z2MbOvvVrsxf_1wSMs6I_-XyIa905yaDqvYh-coA" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-emerald-400 focus:border-emerald-500 focus:outline-none font-mono">
-                                <p class="text-[11px] text-slate-400 mt-1">
-                                    Default ID: <code class="text-slate-300 bg-slate-950 px-1.5 py-0.5 rounded">1S43Z2MbOvvVrsxf_1wSMs6I_-XyIa905yaDqvYh-coA</code>
-                                </p>
-                            </div>
-
-                            <div>
-                                <label class="block text-slate-300 font-semibold mb-1 flex items-center gap-1.5">
-                                    <i class="fa-solid fa-link text-cyan-500"></i> Google Apps Script Web App URL (Jembatan Sync):
-                                </label>
-                                <input type="text" id="gsheet-webapp-url" oninput="updateSpreadsheetBadge()" placeholder="https://script.google.com/macros/s/AKfycb.../exec" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-slate-100 focus:border-emerald-500 focus:outline-none font-mono">
-                            </div>
+                        <div class="pt-4 border-t border-slate-800">
+                            <label class="block text-slate-300 font-semibold mb-1 flex items-center gap-1.5">
+                                <i class="fa-solid fa-table text-emerald-500"></i> Google Apps Script Web App URL (Database Sheet):
+                            </label>
+                            <input type="text" id="gsheet-webapp-url" value="https://script.google.com/macros/s/AKfycbymrpzfaRRdYVFk8d2s0I48V2OttoXHoaaeXcVNVEQAyuXq4yUn3Nn2FYyrBSBFIH4hFg/exec" placeholder="https://script.google.com/macros/s/AKfycb.../exec" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-slate-100 focus:border-emerald-500 focus:outline-none font-mono">
+                            <p class="text-[11px] text-slate-400 mt-1.5">
+                                Terhubung ke Spreadsheet ID: <code class="text-emerald-400 bg-slate-950 px-1.5 py-0.5 rounded">1l12mmY-78j-uso78351KeBPrVSou1ORan-9At_cHISw</code>
+                            </p>
                         </div>
                     </div>
 
@@ -1042,44 +1024,32 @@ Stok terbatas, segera hubungi Turja Computer."></textarea>
             syncAllFromGoogleSheet(false);
         });
 
-        // Google Sheet Database Config
-        const DEFAULT_SPREADSHEET_ID = "1S43Z2MbOvvVrsxf_1wSMs6I_-XyIa905yaDqvYh-coA";
+        // Toggle Voice Gender Selection Tab
+        function toggleVoiceGender(gender) {
+            const maleBtn = document.getElementById('btn-voice-male');
+            const femaleBtn = document.getElementById('btn-voice-female');
+            const maleList = document.getElementById('male-voices-list');
+            const femaleList = document.getElementById('female-voices-list');
 
-        function getSpreadsheetId() {
-            return localStorage.getItem('tc_spreadsheet_id') || DEFAULT_SPREADSHEET_ID;
+            if (gender === 'male') {
+                maleBtn.className = "py-1.5 rounded-md text-center bg-brand-red text-white shadow";
+                femaleBtn.className = "py-1.5 rounded-md text-center text-slate-400 hover:text-white";
+                maleList.classList.remove('hidden');
+                femaleList.classList.add('hidden');
+            } else {
+                femaleBtn.className = "py-1.5 rounded-md text-center bg-brand-red text-white shadow";
+                maleBtn.className = "py-1.5 rounded-md text-center text-slate-400 hover:text-white";
+                femaleList.classList.remove('hidden');
+                maleList.classList.add('hidden');
+            }
         }
+
+        // Google Sheet Database Config
+        const TARGET_SPREADSHEET_ID = "1l12mmY-78j-uso78351KeBPrVSou1ORan-9At_cHISw";
+        const DEFAULT_GSHEET_URL = "https://script.google.com/macros/s/AKfycbymrpzfaRRdYVFk8d2s0I48V2OttoXHoaaeXcVNVEQAyuXq4yUn3Nn2FYyrBSBFIH4hFg/exec";
 
         function getGSheetUrl() {
-            return localStorage.getItem('tc_gsheet_url') || "";
-        }
-
-        function updateSpreadsheetBadge() {
-            const sheetInput = document.getElementById('gsheet-spreadsheet-id');
-            const urlInput = document.getElementById('gsheet-webapp-url');
-            const badge = document.getElementById('sheet-connection-badge');
-            const dot = document.getElementById('sheet-connection-dot');
-            const text = document.getElementById('sheet-connection-text');
-
-            if (!sheetInput || !badge) return;
-
-            const currentId = sheetInput.value.trim();
-            const currentUrl = urlInput ? urlInput.value.trim() : "";
-
-            if (currentId.length >= 15) {
-                if (currentUrl && currentUrl.includes('/exec')) {
-                    badge.className = "inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-950/90 text-emerald-400 border border-emerald-600/60";
-                    dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse";
-                    text.innerText = "ID & Web App Terhubung";
-                } else {
-                    badge.className = "inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-cyan-950/90 text-cyan-400 border border-cyan-700/60";
-                    dot.className = "w-1.5 h-1.5 rounded-full bg-cyan-400";
-                    text.innerText = "ID Spreadsheet Terhubung";
-                }
-            } else {
-                badge.className = "inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-amber-950/90 text-amber-400 border border-amber-700/60";
-                dot.className = "w-1.5 h-1.5 rounded-full bg-amber-400";
-                text.innerText = "ID Spreadsheet Belum Valid";
-            }
+            return localStorage.getItem('tc_gsheet_url') || DEFAULT_GSHEET_URL;
         }
 
         async function postToGoogleSheet(payload) {
@@ -1090,7 +1060,7 @@ Stok terbatas, segera hubungi Turja Computer."></textarea>
                     method: 'POST',
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({ spreadsheetId: getSpreadsheetId(), ...payload })
+                    body: JSON.stringify({ spreadsheetId: TARGET_SPREADSHEET_ID, ...payload })
                 });
                 return true;
             } catch (err) {
@@ -1107,19 +1077,19 @@ Stok terbatas, segera hubungi Turja Computer."></textarea>
             }
             if (showNotification) showToast("Menyinkronkan data dari Google Sheet...", "info");
             try {
-                const res = await fetch(`${url}?action=getAll&spreadsheetId=${encodeURIComponent(getSpreadsheetId())}`);
+                const res = await fetch(`${url}?action=getAll&spreadsheetId=${TARGET_SPREADSHEET_ID}`);
                 const data = await res.json();
                 if (data.status === 'success') {
                     if (Array.isArray(data.history)) {
-                        const localMap = new Map(historyData.map(item => [String(item.id), item]));
-                        historyData = data.history.map(remoteItem => {
-                            const localMatch = localMap.get(String(remoteItem.id));
-                            return {
-                                ...remoteItem,
-                                audioBase64: (localMatch && localMatch.audioBase64) ? localMatch.audioBase64 : null,
-                                audioUrl: remoteItem.audioUrl || (localMatch ? localMatch.audioUrl : "")
-                            };
+                        // Pertahankan audioBase64 yang tersimpan lokal agar tetap bisa diputar & didownload
+                        const localAudioMap = {};
+                        historyData.forEach(item => {
+                            if (item.audioBase64) localAudioMap[String(item.id)] = item.audioBase64;
                         });
+                        historyData = data.history.map(item => ({
+                            ...item,
+                            audioBase64: item.audioBase64 || localAudioMap[String(item.id)] || null
+                        }));
                         localStorage.setItem('tc_voice_history', JSON.stringify(historyData));
                         renderHistoryTable();
                         renderDashboardHistory();
@@ -1166,18 +1136,14 @@ Stok terbatas, segera hubungi Turja Computer."></textarea>
 
         function checkApiKeyStatus() {
             const key = getActiveApiKey();
-            const sheetId = getSpreadsheetId();
             const gsheetUrl = getGSheetUrl();
             const input = document.getElementById('gemini-api-key-input');
-            const sheetInput = document.getElementById('gsheet-spreadsheet-id');
             const gsheetInput = document.getElementById('gsheet-webapp-url');
             const dot = document.getElementById('api-status-dot');
             const text = document.getElementById('api-status-text');
 
             if (input) input.value = key;
-            if (sheetInput) sheetInput.value = sheetId;
             if (gsheetInput) gsheetInput.value = gsheetUrl;
-            updateSpreadsheetBadge();
 
             if (key && key.trim().length > 10) {
                 dot.className = "w-2 h-2 rounded-full bg-emerald-500";
@@ -1196,24 +1162,23 @@ Stok terbatas, segera hubungi Turja Computer."></textarea>
 
         function saveGeminiApiKey() {
             const val = document.getElementById('gemini-api-key-input').value.trim();
-            const sheetIdVal = document.getElementById('gsheet-spreadsheet-id').value.trim() || DEFAULT_SPREADSHEET_ID;
             const gsheetVal = document.getElementById('gsheet-webapp-url').value.trim();
 
-            if (val) localStorage.setItem('tc_gemini_api_key', val);
-            localStorage.setItem('tc_spreadsheet_id', sheetIdVal);
+            if (!val && !gsheetVal) {
+                return showToast("Masukkan API Key atau URL Google Apps Script terlebih dahulu!", "warning");
+            }
 
+            if (val) localStorage.setItem('tc_gemini_api_key', val);
             if (gsheetVal) {
                 if (!gsheetVal.includes('/exec')) {
                     return showToast("URL Web App harus berakhiran '/exec'!", "error");
                 }
                 localStorage.setItem('tc_gsheet_url', gsheetVal);
-            } else {
-                localStorage.removeItem('tc_gsheet_url');
             }
 
             postToGoogleSheet({ 
                 action: 'saveSettings', 
-                settings: { apiKey: val, spreadsheetId: sheetIdVal, gsheetUrl: gsheetVal } 
+                settings: { apiKey: val, gsheetUrl: gsheetVal } 
             });
 
             checkApiKeyStatus();
@@ -1223,13 +1188,11 @@ Stok terbatas, segera hubungi Turja Computer."></textarea>
 
         function clearGeminiApiKey() {
             localStorage.removeItem('tc_gemini_api_key');
-            localStorage.removeItem('tc_spreadsheet_id');
             localStorage.removeItem('tc_gsheet_url');
             document.getElementById('gemini-api-key-input').value = '';
-            document.getElementById('gsheet-spreadsheet-id').value = DEFAULT_SPREADSHEET_ID;
-            document.getElementById('gsheet-webapp-url').value = '';
+            document.getElementById('gsheet-webapp-url').value = DEFAULT_GSHEET_URL;
             checkApiKeyStatus();
-            showToast("Konfigurasi direset ke Spreadsheet ID default.", "info");
+            showToast("API Key direset (URL Sheet kembali ke default).", "info");
         }
 
         function toggleApiKeyVisibility() {
@@ -1577,26 +1540,6 @@ Stok terbatas, segera hubungi Turja Computer."></textarea>
         function updatePitchLabel(val) {
             const labels = { "1": "Sangat Rendah", "2": "Rendah", "3": "Natural", "4": "Tinggi", "5": "Sangat Tinggi" };
             document.getElementById('val-pitch').innerText = labels[val] || "Natural";
-        }
-
-        // Toggle Male / Female Voice List
-        function toggleVoiceGender(gender) {
-            const maleList = document.getElementById('male-voices-list');
-            const femaleList = document.getElementById('female-voices-list');
-            const btnMale = document.getElementById('btn-voice-male');
-            const btnFemale = document.getElementById('btn-voice-female');
-
-            if (gender === 'male') {
-                maleList.classList.remove('hidden');
-                femaleList.classList.add('hidden');
-                btnMale.className = "py-1.5 rounded-md text-center bg-brand-red text-white shadow";
-                btnFemale.className = "py-1.5 rounded-md text-center text-slate-400 hover:text-white";
-            } else {
-                femaleList.classList.remove('hidden');
-                maleList.classList.add('hidden');
-                btnFemale.className = "py-1.5 rounded-md text-center bg-brand-red text-white shadow";
-                btnMale.className = "py-1.5 rounded-md text-center text-slate-400 hover:text-white";
-            }
         }
 
         // Preset Quick Configs (Point 4)
@@ -2036,6 +1979,7 @@ Hanya tampilkan hasil script bersih siap dibaca voice over.`;
         function saveToHistory(script, voice, duration) {
             const audioWavBlob = currentAudioBuffer ? audioBufferToWav(currentAudioBuffer) : null;
             
+            // Helper to convert blob to base64 for reliable history playback & download storage
             if (audioWavBlob) {
                 const reader = new FileReader();
                 reader.onloadend = function() {
@@ -2048,77 +1992,22 @@ Hanya tampilkan hasil script bersih siap dibaca voice over.`;
             }
         }
 
-        async function pushItemToHistoryStore(script, voice, durationStr, base64Audio) {
-            const itemId = Date.now();
+        function pushItemToHistoryStore(script, voice, durationStr, base64Audio) {
             const item = {
-                id: itemId,
+                id: Date.now(),
                 title: script.slice(0, 45) + (script.length > 45 ? '...' : ''),
                 fullScript: script,
                 voice: voice,
                 duration: durationStr,
                 date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
-                audioBase64: base64Audio,
-                audioUrl: ""
+                audioBase64: base64Audio
             };
             historyData.unshift(item);
-            try {
-                localStorage.setItem('tc_voice_history', JSON.stringify(historyData));
-            } catch (e) {
-                // Jika kuota localStorage penuh karena file audio besar, simpan versi ringkas di lokal
-                const trimmed = historyData.map((h, idx) => idx > 4 ? { ...h, audioBase64: null } : h);
-                localStorage.setItem('tc_voice_history', JSON.stringify(trimmed));
-            }
+            localStorage.setItem('tc_voice_history', JSON.stringify(historyData));
             renderHistoryTable();
             renderDashboardHistory();
 
-            // Kirim ke Google Sheet & Google Drive (via Apps Script)
-            const gsheetUrl = getGSheetUrl();
-            if (gsheetUrl) {
-                try {
-                    const res = await fetch(gsheetUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                        body: JSON.stringify({
-                            spreadsheetId: getSpreadsheetId(),
-                            action: 'addHistory',
-                            item: {
-                                id: item.id,
-                                title: item.title,
-                                fullScript: item.fullScript,
-                                voice: item.voice,
-                                duration: item.duration,
-                                date: item.date,
-                                audioBase64: base64Audio
-                            }
-                        })
-                    });
-                    const data = await res.json();
-                    if (data && data.audioUrl) {
-                        const target = historyData.find(h => String(h.id) === String(itemId));
-                        if (target) {
-                            target.audioUrl = data.audioUrl;
-                            localStorage.setItem('tc_voice_history', JSON.stringify(historyData));
-                            renderHistoryTable();
-                            renderDashboardHistory();
-                        }
-                        showToast("Audio tersimpan ke Google Drive & Spreadsheet!", "success");
-                    }
-                } catch (err) {
-                    // Fallback jika CORS memblokir pembacaan response
-                    postToGoogleSheet({
-                        action: 'addHistory',
-                        item: {
-                            id: item.id,
-                            title: item.title,
-                            fullScript: item.fullScript,
-                            voice: item.voice,
-                            duration: item.duration,
-                            date: item.date,
-                            audioBase64: base64Audio
-                        }
-                    });
-                }
-            }
+            postToGoogleSheet({ action: 'addHistory', item: { ...item, audioBase64: undefined } });
         }
 
         function renderHistoryTable() {
@@ -2127,38 +2016,28 @@ Hanya tampilkan hasil script bersih siap dibaca voice over.`;
                 tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">Belum ada riwayat voice over.</td></tr>`;
                 return;
             }
-            tbody.innerHTML = historyData.map(h => {
-                const hasPlayable = Boolean(h.audioBase64 || h.audioUrl);
-                return `
+            tbody.innerHTML = historyData.map(h => `
                 <tr class="hover:bg-slate-950/60 border-b border-slate-800/50">
-                    <td class="p-3">
-                        <div class="font-semibold text-slate-100">${h.title}</div>
-                        <div class="mt-1 flex items-center gap-2">
-                            ${h.audioBase64 ? '<span class="text-[10px] text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-1.5 py-0.5 rounded"><i class="fa-solid fa-check"></i> Audio Siap</span>' : ''}
-                            ${h.audioUrl ? `<a href="${h.audioUrl}" target="_blank" class="text-[10px] text-cyan-400 hover:underline"><i class="fa-brands fa-google-drive"></i> Drive Link</a>` : ''}
-                        </div>
-                    </td>
+                    <td class="p-3 font-semibold text-slate-100">${h.title}</td>
                     <td class="p-3"><span class="bg-slate-800 text-slate-300 px-2 py-0.5 rounded text-[10px]">${h.voice}</span></td>
                     <td class="p-3 font-mono">${h.duration}</td>
                     <td class="p-3 text-slate-400 text-[11px]">${h.date}</td>
                     <td class="p-3 text-right">
-                        <div class="inline-flex items-center gap-2">
-                            <button onclick="playHistoryAudio(${h.id})" id="btn-play-hist-${h.id}" class="px-2.5 py-1.5 rounded-lg ${hasPlayable ? 'bg-cyan-950/80 hover:bg-cyan-900 text-cyan-300 border border-cyan-800/60' : 'bg-slate-800 text-slate-400'} transition flex items-center gap-1 text-[11px] font-semibold" title="${hasPlayable ? 'Putar Audio' : 'Muat Script'}">
-                                <i class="fa-solid ${hasPlayable ? 'fa-play' : 'fa-arrow-up-right-from-square'}"></i>
-                                <span>${hasPlayable ? 'Play' : 'Muat'}</span>
+                        <div class="inline-flex items-center justify-end gap-2">
+                            <button onclick="playHistoryAudio(${h.id})" id="btn-play-hist-${h.id}" class="bg-cyan-950/80 hover:bg-cyan-900 text-cyan-300 border border-cyan-800/60 px-2.5 py-1.5 rounded-lg text-[11px] font-bold inline-flex items-center gap-1.5 transition" title="${h.audioBase64 ? 'Putar Audio' : 'Putar / Muat Script'}">
+                                <i class="fa-solid fa-play"></i> <span>Play</span>
                             </button>
-                            ${hasPlayable ? `
-                            <button onclick="downloadHistoryAudio(${h.id})" class="px-2.5 py-1.5 rounded-lg bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 border border-emerald-800/60 transition flex items-center gap-1 text-[11px] font-semibold" title="Download Audio">
+                            ${h.audioBase64 ? `
+                            <button onclick="downloadHistoryAudio(${h.id})" class="bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 border border-emerald-800/60 px-2.5 py-1.5 rounded-lg text-[11px] font-bold inline-flex items-center gap-1 transition" title="Download Audio">
                                 <i class="fa-solid fa-download"></i>
-                                <span>Download</span>
                             </button>` : ''}
-                            <button onclick="deleteHistoryItem(${h.id})" class="p-1.5 rounded-lg text-rose-400 hover:bg-rose-950/60 transition" title="Hapus">
+                            <button onclick="deleteHistoryItem(${h.id})" class="bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-800/60 px-2.5 py-1.5 rounded-lg text-[11px] font-bold inline-flex items-center gap-1 transition" title="Hapus">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
                         </div>
                     </td>
                 </tr>
-            `}).join('');
+            `).join('');
         }
 
         let currentHistoryAudio = null;
@@ -2168,14 +2047,12 @@ Hanya tampilkan hasil script bersih siap dibaca voice over.`;
             const item = historyData.find(h => String(h.id) === String(id));
             if (!item) return;
 
-            const audioSource = item.audioBase64 || item.audioUrl;
-
-            if (!audioSource) {
+            if (!item.audioBase64) {
                 if (item.fullScript) {
                     document.getElementById('ad-script-input').value = item.fullScript;
                     updateScriptStats();
                     switchTab('generator');
-                    showToast("Audio belum tersimpan. Script dimuat ke Generator untuk dibuat ulang!", "info");
+                    showToast("File audio tidak tersimpan di browser ini. Script dimuat ke Generator untuk diputar/dibuat ulang!", "info");
                 } else {
                     showToast("File audio tidak tersedia dalam riwayat ini.", "warning");
                 }
@@ -2190,23 +2067,17 @@ Hanya tampilkan hasil script bersih siap dibaca voice over.`;
             stopHistoryAudio();
 
             try {
-                currentHistoryAudio = new Audio(audioSource);
+                currentHistoryAudio = new Audio(item.audioBase64);
                 currentPlayingHistoryId = id;
 
                 const btn = document.getElementById(`btn-play-hist-${id}`);
-                if (btn) btn.innerHTML = '<i class="fa-solid fa-stop text-amber-400"></i> <span>Stop</span>';
+                if (btn) {
+                    btn.className = "bg-amber-950/90 hover:bg-amber-900 text-amber-300 border border-amber-700/70 px-2.5 py-1.5 rounded-lg text-[11px] font-bold inline-flex items-center gap-1.5 transition";
+                    btn.innerHTML = '<i class="fa-solid fa-stop"></i> <span>Stop</span>';
+                }
 
                 currentHistoryAudio.onended = () => {
                     stopHistoryAudio();
-                };
-
-                currentHistoryAudio.onerror = () => {
-                    stopHistoryAudio();
-                    if (item.audioUrl) {
-                        window.open(item.audioUrl, '_blank');
-                    } else {
-                        showToast("Gagal memutar audio riwayat.", "error");
-                    }
                 };
 
                 currentHistoryAudio.play();
@@ -2225,55 +2096,46 @@ Hanya tampilkan hasil script bersih siap dibaca voice over.`;
             }
             if (currentPlayingHistoryId) {
                 const prevBtn = document.getElementById(`btn-play-hist-${currentPlayingHistoryId}`);
-                if (prevBtn) prevBtn.innerHTML = '<i class="fa-solid fa-play"></i> <span>Play</span>';
+                if (prevBtn) {
+                    prevBtn.className = "bg-cyan-950/80 hover:bg-cyan-900 text-cyan-300 border border-cyan-800/60 px-2.5 py-1.5 rounded-lg text-[11px] font-bold inline-flex items-center gap-1.5 transition";
+                    prevBtn.innerHTML = '<i class="fa-solid fa-play"></i> <span>Play</span>';
+                }
                 currentPlayingHistoryId = null;
             }
         }
 
         function downloadHistoryAudio(id) {
             const item = historyData.find(h => String(h.id) === String(id));
-            if (!item) return;
+            if (!item || !item.audioBase64) return showToast("File audio tidak tersedia untuk didownload.", "warning");
 
-            if (item.audioBase64) {
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = item.audioBase64;
-                a.download = `TC_VoiceAds_${item.id}.wav`;
-                document.body.appendChild(a);
-                a.click();
-                setTimeout(() => a.remove(), 1000);
-                showToast("Audio riwayat berhasil didownload!", "success");
-            } else if (item.audioUrl) {
-                window.open(item.audioUrl, '_blank');
-                showToast("Membuka file audio dari Google Drive untuk diunduh!", "info");
-            } else {
-                showToast("File audio tidak tersedia untuk didownload.", "warning");
-            }
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = item.audioBase64;
+            a.download = `TC_VoiceAds_History_${item.id}.wav`;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => a.remove(), 1000);
+            showToast("Audio riwayat berhasil didownload!", "success");
         }
 
         function renderDashboardHistory() {
             const container = document.getElementById('dashboard-history-preview');
             if(historyData.length === 0) return;
 
-            container.innerHTML = historyData.slice(0, 3).map(h => {
-                const hasPlayable = Boolean(h.audioBase64 || h.audioUrl);
-                return `
+            container.innerHTML = historyData.slice(0, 3).map(h => `
                 <div class="flex items-center justify-between p-2.5 bg-slate-950 rounded-lg border border-slate-800">
                     <div class="flex items-center space-x-3">
-                        <button onclick="playHistoryAudio(${h.id})" class="w-8 h-8 rounded-lg ${hasPlayable ? 'bg-brand-red/20 hover:bg-brand-red text-brand-red hover:text-white' : 'bg-slate-800 text-slate-400'} flex items-center justify-center transition" title="Putar Audio">
-                            <i class="fa-solid fa-play text-xs"></i>
-                        </button>
+                        <div class="w-8 h-8 rounded-lg bg-brand-red/20 text-brand-red flex items-center justify-center">
+                            <i class="fa-solid fa-volume-high text-xs"></i>
+                        </div>
                         <div>
                             <div class="font-bold text-slate-200 text-xs">${h.title}</div>
                             <div class="text-[10px] text-slate-500">${h.voice} • ${h.duration}</div>
                         </div>
                     </div>
-                    <div class="flex items-center gap-2">
-                        ${hasPlayable ? `<button onclick="downloadHistoryAudio(${h.id})" class="text-emerald-400 hover:text-emerald-300 text-xs p-1" title="Download"><i class="fa-solid fa-download"></i></button>` : ''}
-                        <span class="text-[10px] text-slate-400">${h.date}</span>
-                    </div>
+                    <span class="text-[10px] text-slate-400">${h.date}</span>
                 </div>
-            `}).join('');
+            `).join('');
         }
 
         function deleteHistoryItem(id) {
@@ -2367,6 +2229,24 @@ Hanya tampilkan hasil script bersih siap dibaca voice over.`;
             renderProfiles();
             postToGoogleSheet({ action: 'deleteProfile', id: id });
             showToast("Profile dihapus.", "info");
+        }
+
+        function saveBrandingConfig() {
+            const branding = {
+                name: document.getElementById('brand-name').value,
+                wa: document.getElementById('brand-wa').value,
+                address: document.getElementById('brand-address').value,
+                cta: document.getElementById('brand-cta-template').value
+            };
+            localStorage.setItem('tc_branding', JSON.stringify(branding));
+            
+            postToGoogleSheet({ action: 'saveBranding', branding: branding }).then(success => {
+                if(success) {
+                    showToast("Branding Toko disimpan & disinkronkan ke Google Sheet!", "success");
+                } else {
+                    showToast("Branding tersimpan lokal (Gagal sync Sheet, cek URL Web App)", "warning");
+                }
+            });
         }
 
         // UTILITY FUNCTIONS
